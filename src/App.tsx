@@ -27,7 +27,7 @@ function App() {
         }}
       >
         {/* Logo & Info */}
-        <div className="flex flex-col items-center mt-3">
+        <div className="flex flex-col items-center mt-5">
           <img src={logo} alt="Logo" className="h-10 sm:h-12" />
           <div className="text-white text-center mt-4">
             <p className="text-lg sm:text-xl">You're riding with Abebe</p>
@@ -47,7 +47,7 @@ function App() {
             placeholder="Phone ______"
             className="w-full p-3 bg-transparent border border-white rounded-lg text-white placeholder:text-white/70 focus:outline-none focus:ring-2 focus:ring-white"
           />
-          <button className="relative w-full bg-black py-3 px-4 pr-12 rounded-lg font-semibold text-white hover:bg-gray-800 transition-colors">
+          <button className="relative w-full bg-black py-3 px-4 pr-12 rounded-lg font-semibold text-white hover:bg-gray-800 transition-colors mt-8">
             <span className="block text-center">Start Ride</span>
             <span
               className="absolute right-4 top-1/2 -translate-y-1/2 text-xl font-semibold"

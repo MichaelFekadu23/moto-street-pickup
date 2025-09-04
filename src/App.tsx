@@ -7,7 +7,8 @@ function App() {
     <div className="min-h-screen flex flex-col items-center justify-between">
       {/* Driver Information */}
       <div
-        className="h-[414px] w-full flex items-center justify-center relative overflow-hidden"
+        className="h-[40vh] md:h-[45vh] lg:h-[50vh]
+ w-full flex items-center justify-center relative overflow-hidden"
       >
         <div
           className="absolute inset-0 bg-cover bg-center"

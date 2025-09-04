@@ -1,3 +1,7 @@
+import bgImg from './assets/bg-img.png'; // Correctly import the image
+import frame from './assets/Frame.png'; // Do the same for other images
+import logo from './assets/logo.svg';
+
 function App() {
   return (
     <div className="min-h-screen flex flex-col items-center justify-between">
@@ -8,7 +12,7 @@ function App() {
         <div
           className="absolute inset-0 bg-cover bg-center"
           style={{
-            backgroundImage: 'url(/src/assets/bg-img.png)',
+            backgroundImage: `url(${bgImg})`,
             marginTop: '-40px',
           }}
         >
@@ -19,14 +23,14 @@ function App() {
       <div
         className="flex flex-col items-center justify-end flex-grow w-full px-4 sm:px-6 md:px-8"
         style={{
-          backgroundImage: 'url(/src/assets/Frame.png)',
+          backgroundImage: `url(${frame})`,
           backgroundRepeat: 'repeat-x',
           backgroundSize: 'cover',
           background: 'linear-gradient(180deg, #0F141F 11.44%, rgba(0, 0, 0, 0.00) 157.97%)',
         }}
       >
         <div>
-          <img src="/src/assets/logo.svg" alt="Logo" />
+          <img src={logo} alt="Logo" />
         </div>
         <div className="text-white text-center mt-6">
           <p className="text-lg">You're riding with Abebe</p>

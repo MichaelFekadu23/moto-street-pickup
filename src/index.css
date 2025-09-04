@@ -1,0 +1,14 @@
+@import "tailwindcss";
+
+/* Theme tokens (v4) */
+@theme {
+  --font-sans: "Open Sans", ui-sans-serif, system-ui;
+
+
+}
+
+/* Base font */
+:root {
+  font-family: var(--font-sans);
+}
+

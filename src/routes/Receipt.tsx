@@ -1,9 +1,19 @@
+import { useEffect, useRef } from 'react';
 import MainContentWrapper from '../components/MianContentWrapper';
 import logo from '../assets/logo.svg';
 import Footer from '../components/Footer';
 import pay from '../assets/pay.svg';
 
 const Entry = () => {
+  const bottomRef = useRef(null);
+
+  useEffect(() => {
+    // Let the browser layout first, then scroll
+    requestAnimationFrame(() => {
+      bottomRef.current?.scrollIntoView({ behavior: 'auto', block: 'end' });
+      // or: window.scrollTo({ top: document.body.scrollHeight, behavior: 'auto' });
+    });
+  }, []);
   return (
     <MainContentWrapper>
       <div className="flex flex-col items-center justify-between w-full h-full">

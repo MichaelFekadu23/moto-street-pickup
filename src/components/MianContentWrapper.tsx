@@ -8,7 +8,7 @@ interface MainContentWrapperProps {
 const MainContentWrapper: React.FC<MainContentWrapperProps> = ({ children }) => {
   return (
     <div
-      className="relative flex-[0.7] md:flex-[0.65] lg:flex-[0.6] flex flex-col items-center justify-between px-4 sm:px-6 md:px-8"
+      className="relative flex-[0.7] flex flex-col items-center justify-between px-4 sm:px-6 md:px-8"
       style={{
         backgroundImage: `url(${frame})`,
         backgroundRepeat: 'repeat-x',

@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Layout from './components/Layout';
 
-import Entry from './routes/Entry';
+// import Entry from './routes/Entry';
 import AwaitingDriverConfirm from './routes/AwaitingDriverConfirm';
 import InTrip from './routes/InTrip';
 import TripComplete from './routes/TripComplete';
@@ -12,7 +12,7 @@ function App() {
     <Router>
       <Layout>
         <Routes>
-          <Route path="/" element={<Entry />} />
+          <Route path="/" element={<Receipt />} />
           <Route path="/awaiting" element={<AwaitingDriverConfirm />} />
           <Route path="/trip" element={<InTrip />} />
           <Route path="/trip-complete" element={<TripComplete />} />

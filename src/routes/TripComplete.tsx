@@ -29,7 +29,7 @@ const AwaitingDriverConfirm = () => {
             </p>
         </div>
         <div className="flex flex-col gap-4">
-          <button className="relative bg-transparent border-1 border-black text-black py-2 px-4 rounded-md flex items-center justify-center gap-3">
+          <button className="relative bg-transparent border-1 border-black text-black py-3 px-4 rounded-md flex items-center justify-center gap-3">
             <img src={Share} className='h-5 w-5' alt="Share Icon"/>
             <span className="text-center font-semibold text-[14px]">Share Receipt</span>
           </button>

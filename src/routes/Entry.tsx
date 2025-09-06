@@ -25,7 +25,7 @@ const Entry = () => {
         </div>
 
         {/* Buttons and Footer */}
-        <div className="flex flex-col w-full items-center justify-center gap-3 flex-shrink-0 mt-5">
+        <div className="flex flex-col w-full max-w-sm items-center justify-center gap-3 flex-shrink-0 mt-5">
           <PrimaryButton title="Start Ride" />
           <Footer text="Powered by Moto street pickup" />
         </div>

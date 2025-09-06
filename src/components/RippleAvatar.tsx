@@ -9,10 +9,10 @@ function Ripple({ delay = 0 }) {
       initial={{ scale: 0.9, opacity: 0.5 }}
       animate={{ scale: 2.1, opacity: 0 }}
       transition={{
-        duration: 2.4,
+        duration: 2.0,
         ease: 'easeOut',
         repeat: Infinity,
-        repeatDelay: 0.4,
+        repeatDelay: 0.3,
         delay,
       }}
     />

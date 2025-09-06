@@ -2,12 +2,21 @@ import MainContentWrapper from '../components/MianContentWrapper';
 import LogoAndDriverInfo from '../components/LogoAndDriverInfo';
 import Footer from '../components/Footer';
 import RippleAvatar from '../components/RippleAvatar';
+import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
 
 const AwaitingDriverConfirm = () => {
+  const navigate = useNavigate();
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      navigate('/trip'); // Navigate to InTrip after 5 seconds
+    }, 5000);
+    return () => clearTimeout(timer);
+  }, [navigate]);
   return (
     <MainContentWrapper>        
         {/* Logo + Driver Info */}
-      <div className="flex basis-1/5 items-center justify-center w-full">
+      <div className="flex items-center justify-center w-full mt-8">
         <LogoAndDriverInfo 
           className="flex flex-col items-center justify-center"
           driverName="Abebe"

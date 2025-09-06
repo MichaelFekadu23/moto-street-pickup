@@ -8,7 +8,7 @@ const Entry = () => {
   const navigate = useNavigate();
   const handleCompleteRide = () => {
     // navigate to TripComplete page
-    navigate('/complete');   
+    navigate('/receipt');   
   };
   return (
     <MainContentWrapper>

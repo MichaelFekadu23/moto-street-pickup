@@ -6,12 +6,15 @@ import Receipt from './routes/Receipt'; // Import the Receipt component
 
 function App() {
   return (
-    <Layout>
-      {/* <Entry /> */}
-      {/* <AwaitingDriverConfirm /> */}
-      {/* <Intrip /> */}
-      <Receipt />
-    </Layout>
+    <div className='h-[100svh]'>
+      <Layout>
+        {/* <Entry /> */}
+        {/* <AwaitingDriverConfirm /> */}
+        {/* <Intrip /> */}
+        <Receipt />
+      </Layout>
+
+    </div>
   );
 }
 

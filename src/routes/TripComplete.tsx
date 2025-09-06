@@ -8,7 +8,7 @@ const AwaitingDriverConfirm = () => {
   return (
     <MainContentWrapper>        
       {/* Logo + Driver Info */}
-      <div className="flex items-center justify-center w-full mt-7">
+      <div className="flex items-center justify-center w-full mt-10">
         <div className={`flex flex-col items-center justify-center`}>
           <img src={logo} alt="Logo" className="h-10 sm:h-12" />
           <div className="text-white text-center mt-5">

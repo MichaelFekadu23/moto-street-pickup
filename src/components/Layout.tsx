@@ -1,5 +1,5 @@
 import React, { type ReactNode } from 'react';
-import Header from './Header'; // Assuming Header is in the same directory
+import Header from './Header';
 
 interface LayoutProps {
   children: ReactNode;
@@ -7,9 +7,9 @@ interface LayoutProps {
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
   return (
-    <div className="h-screen flex flex-col min-h-[100svh]">
+    <div className="min-h-[100svh] flex flex-col">
       <Header />
-      {children}
+      <main className="flex-1">{children}</main>
     </div>
   );
 };

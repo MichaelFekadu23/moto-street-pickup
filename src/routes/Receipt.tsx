@@ -7,7 +7,7 @@ const Entry = () => {
   
   return (
     <MainContentWrapper>
-      <div className="flex flex-col items-center justify-between w-full h-5/6">
+      <div className="flex flex-col items-center justify-between w-full h-11/12">
 
         {/* Logo and Driver Info should take higher space */}
         <div className="flex flex-col basis-2/5 gap-4 items-center justify-center w-full">

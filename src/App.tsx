@@ -1,19 +1,25 @@
-import Layout from './components/Layout'; // Import the new Layout wrapper
-// import AwaitingDriverConfirm from './routes/AwaitingDriverConfirm';
-// import Entry from './routes/Entry'; // Import the Entry component
-// import Intrip from './routes/InTrip'; // Import the InTrip component
-// import TripComplete from './routes/TripComplete'; // Import the TripComplete component
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Layout from './components/Layout';
+
+import Entry from './routes/Entry';
+import AwaitingDriverConfirm from './routes/AwaitingDriverConfirm';
+import InTrip from './routes/InTrip';
+import TripComplete from './routes/TripComplete';
 import Receipt from './routes/Receipt';
 
 function App() {
   return (
-    <Layout>
-      {/* <Entry /> */}
-      {/* <AwaitingDriverConfirm /> */}
-      {/* <Intrip /> */}
-      {/* <TripComplete /> */}
-      <Receipt />
-    </Layout>
+    <Router>
+      <Layout>
+        <Routes>
+          <Route path="/" element={<Entry />} />
+          <Route path="/awaiting" element={<AwaitingDriverConfirm />} />
+          <Route path="/trip" element={<InTrip />} />
+          <Route path="/trip-complete" element={<TripComplete />} />
+          <Route path="/receipt" element={<Receipt />} />
+        </Routes>
+      </Layout>
+    </Router>
   );
 }
 

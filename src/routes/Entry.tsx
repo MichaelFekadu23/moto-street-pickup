@@ -3,12 +3,18 @@ import PrimaryButton from '../components/PrimaryButton';
 import LogoAndDriverInfo from '../components/LogoAndDriverInfo';
 import InputField from '../components/InputField';
 import Footer from '../components/Footer';
+import { useNavigate } from 'react-router-dom';
 
 const Entry = () => {
+  const navigate = useNavigate();
+  const handleStartRide = () => {
+    // navigate to AwaitingDriverConfirm page
+    navigate('/awaiting');   
+  };
   return (
     <MainContentWrapper>
       {/* Logo and Driver Info should take higher space */}
-      <div className="flex flex-grow items-center justify-center w-full">
+      <div className="flex items-center justify-center w-full mt-8">
         <LogoAndDriverInfo 
           className="flex flex-col items-center justify-center"
           driverName="Abebe"
@@ -24,7 +30,7 @@ const Entry = () => {
 
       {/* Buttons and Footer */}
       <div className="flex flex-col w-full max-w-sm items-center justify-center gap-3 flex-shrink-0">
-        <PrimaryButton title="Start Ride" />
+        <PrimaryButton title="Start Ride" onclick={handleStartRide}/>
         <Footer text="Powered by Moto street pickup" />
       </div>
     </MainContentWrapper>

@@ -1,9 +1,15 @@
+import { useNavigate } from 'react-router-dom';
 import MainContentWrapper from '../components/MianContentWrapper';
 import PrimaryButton from '../components/PrimaryButton';
 import logo from '../assets/logo.svg';
 import Footer from '../components/Footer';
 
 const Entry = () => {
+  const navigate = useNavigate();
+  const handleCompleteRide = () => {
+    // navigate to TripComplete page
+    navigate('/complete');   
+  };
   return (
     <MainContentWrapper>
       {/* Logo and Driver Info should take higher space */}
@@ -35,7 +41,7 @@ const Entry = () => {
 
       {/* Buttons and Footer */}
       <div className="flex flex-col w-full max-w-sm items-center justify-center gap-3 flex-shrink-0">
-        <PrimaryButton title="Confirm End Trip" />
+        <PrimaryButton title="Confirm End Trip" onclick={handleCompleteRide}/>
         <Footer text="Powered by Moto street pickup" />
       </div>
     </MainContentWrapper>

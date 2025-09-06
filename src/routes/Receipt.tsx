@@ -2,13 +2,14 @@ import MainContentWrapper from '../components/MianContentWrapper';
 import logo from '../assets/logo.svg';
 import Footer from '../components/Footer';
 import pay from '../assets/pay.svg';
+import { Link } from 'react-router-dom';
 
 const Entry = () => {
   
   return (
     <MainContentWrapper>
       {/* Logo and Driver Info should take higher space */}
-      <div className="flex flex-col gap-4 items-center justify-center w-full mt-10">
+      <div className="flex flex-col gap-4 items-center justify-center w-full mt-8">
         <div>
         <img src={logo} alt="Logo" className="h-8 sm:h-12" />
         </div>
@@ -40,10 +41,12 @@ const Entry = () => {
 
       {/* Buttons and Footer */}
       <div className="flex flex-col w-full max-w-sm items-center justify-center gap-3 flex-shrink-0">
-        <button className="relative w-full bg-black py-3 px-4 rounded-lg font-semibold text-white hover:bg-gray-800 transition-colors mt-6 flex items-center justify-center gap-3">
-          <img src={pay} className='h-5 w-5' alt="Pay Icon"/>
-          <span className="text-center font-semibold text-[14px]">Pay Now</span>
-        </button>
+        <Link to={"/trip-complete"}>
+          <button className="relative w-full bg-black py-3 px-4 rounded-lg font-semibold text-white hover:bg-gray-800 transition-colors mt-6 flex items-center justify-center gap-3">
+            <img src={pay} className='h-5 w-5' alt="Pay Icon"/>
+            <span className="text-center font-semibold text-[14px]">Pay Now</span>
+          </button>
+        </Link>
         <Footer text="Powered by Moto street pickup" />
       </div>
     </MainContentWrapper>

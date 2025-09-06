@@ -42,7 +42,7 @@ const Entry = () => {
         {/* Buttons and Footer */}
         <div className="flex flex-col w-full max-w-sm items-center justify-center gap-3 flex-shrink-0 mt-5">
           <button className="relative w-full bg-black py-3 px-4 rounded-lg font-semibold text-white hover:bg-gray-800 transition-colors mt-6 flex items-center justify-center gap-3">
-            <img src={pay} alt="Pay Icon" className="h-5 w-5" />
+            <img src={pay} alt="Pay Icon"/>
             <span className="text-center font-semibold text-[14px]">Pay Now</span>
           </button>
           <Footer text="Powered by Moto street pickup" />

@@ -1,5 +1,5 @@
 import Layout from './components/Layout'; // Import the new Layout wrapper
-import AwaitingDriverConfirm from './routes/AwaitingDriverConfirm';
+// import AwaitingDriverConfirm from './routes/AwaitingDriverConfirm';
 import Entry from './routes/Entry'; // Import the Entry component
 
 function App() {

@@ -16,7 +16,7 @@ const AwaitingDriverConfirm = () => {
       </div>
 
       {/* Profile + Awaiting Message */}
-      <div className="flex flex-col items-center justify-center flex-grow">
+      <div className="flex flex-col items-center justify-center">
         <RippleAvatar />
       </div>
       <div className="flex flex-col gap-4">

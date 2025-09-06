@@ -17,13 +17,13 @@ const Entry = () => {
       </div>
 
       {/* Form */}
-      <div className="w-full max-w-sm space-y-8 mt-5 flex-shrink-0">
+      <div className="w-full max-w-sm space-y-8 flex-shrink-0">
         <InputField type="text" placeholder="Name ______" />
         <InputField type="tel" placeholder="Phone ______" />
       </div>
 
       {/* Buttons and Footer */}
-      <div className="flex flex-col w-full max-w-sm items-center justify-center gap-3 flex-shrink-0 mt-5">
+      <div className="flex flex-col w-full max-w-sm items-center justify-center gap-3 flex-shrink-0">
         <PrimaryButton title="Start Ride" />
         <Footer text="Powered by Moto street pickup" />
       </div>

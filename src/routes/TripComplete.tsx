@@ -20,13 +20,13 @@ const AwaitingDriverConfirm = () => {
       </div>
 
       {/* Profile + Awaiting Message */}
-      <div className="flex flex-col items-center justify-start flex-grow">
-        <img src={Completed} alt="Profile" className="h-20 w-20 m-4" />
+      <div className="flex flex-col items-center justify-start">
+        <img src={Completed} alt="Profile" className="h-20 w-20 mb-4" />
           <p className="font-semibold text-[20px] uppercase text-white">
             THANK YOU
           </p>
       </div>
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-4 w-full">
         <button className="relative bg-transparent border-1 border-black text-black py-3 px-4 rounded-md flex items-center justify-center gap-3">
           <img src={Share} className='h-5 w-5' alt="Share Icon"/>
           <span className="text-center font-semibold text-[14px]">Share Receipt</span>

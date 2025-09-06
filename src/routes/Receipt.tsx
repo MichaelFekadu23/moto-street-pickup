@@ -5,7 +5,7 @@ import Footer from '../components/Footer';
 import pay from '../assets/pay.svg';
 
 const Entry = () => {
-  const bottomRef = useRef(null);
+  const bottomRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     // Let the browser layout first, then scroll

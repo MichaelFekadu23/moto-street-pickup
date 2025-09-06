@@ -14,10 +14,10 @@ const Entry = () => {
           <img src={logo} alt="Logo" className="h-8 sm:h-12" />
           </div>
           <div className="text-white text-center">
-            <p className="font-semibold text-[20px] uppercase">
+            <p className="font-semibold text-[24px] uppercase">
               RIDE IN
             </p>
-            <p className="font-semibold text-[20px] uppercase">
+            <p className="font-semibold text-[24px] uppercase">
               PROGRESS
             </p>
           </div>

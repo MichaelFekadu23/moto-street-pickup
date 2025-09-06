@@ -7,7 +7,7 @@ import Footer from '../components/Footer';
 const Entry = () => {
   return (
     <MainContentWrapper>
-      <div className="flex flex-col items-center justify-between w-full h-full mb-14">
+      <div className="flex flex-col items-center justify-between w-full h-full">
 
         {/* Logo and Driver Info should take higher space */}
         <div className="flex flex-grow items-center justify-center w-full">

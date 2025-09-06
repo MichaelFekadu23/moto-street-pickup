@@ -7,7 +7,7 @@ const Header = () => {
         className="absolute inset-0 bg-contain bg-repeat"
         style={{
           backgroundImage: `url(${bgImg})`,
-          marginTop: '-40px',
+          marginTop: '-45px',
         }}
       />
     </div>

@@ -7,7 +7,7 @@ const AwaitingDriverConfirm = () => {
   return (
     <MainContentWrapper>        
         {/* Logo + Driver Info */}
-      <div className="flex basis-2/5 items-center justify-center w-full">
+      <div className="flex basis-1/5 items-center justify-center w-full">
         <LogoAndDriverInfo 
           className="flex flex-col items-center justify-center"
           driverName="Abebe"
@@ -16,7 +16,7 @@ const AwaitingDriverConfirm = () => {
       </div>
 
       {/* Profile + Awaiting Message */}
-      <div className="flex flex-col items-center justify-start flex-grow">
+      <div className="flex flex-col items-center justify-center flex-grow">
         <RippleAvatar />
       </div>
       <div className="flex flex-col gap-4">

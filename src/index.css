@@ -12,8 +12,5 @@
   font-family: var(--font-sans);
 }
 
-@layer base {
-  html, body, #root { @apply h-full; }
-}
 
 

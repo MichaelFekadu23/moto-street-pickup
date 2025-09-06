@@ -1,5 +1,4 @@
 import MainContentWrapper from '../components/MianContentWrapper';
-import PrimaryButton from '../components/PrimaryButton';
 import logo from '../assets/logo.svg';
 import Footer from '../components/Footer';
 import pay from '../assets/pay.svg';

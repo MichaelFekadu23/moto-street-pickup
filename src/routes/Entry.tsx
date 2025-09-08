@@ -24,8 +24,8 @@ const Entry = () => {
 
       {/* Form */}
       <div className="w-full max-w-sm space-y-8 flex-shrink-0">
-        <InputField type="text" placeholder="Name ______" />
-        <InputField type="tel" placeholder="Phone ______" />
+        <InputField type="text" label="Name" />
+        <InputField type="tel" label="Phone" />
       </div>
 
       {/* Buttons and Footer */}

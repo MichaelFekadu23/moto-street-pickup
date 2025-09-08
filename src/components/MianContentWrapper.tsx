@@ -13,7 +13,7 @@ const MainContentWrapper: React.FC<MainContentWrapperProps> = ({ children }) => 
         backgroundImage: `url(${frame})`,
         backgroundRepeat: 'repeat-x',
         backgroundSize: 'cover',
-        background: 'linear-gradient(180deg, #0F141F, rgba(0, 0, 0, 0.00) 147.97%)',
+        background: 'linear-gradient(180deg, #0F141F 10%, rgba(0, 0, 0, 0.00) 157.97%)',
       }}
     >
       <div className='flex flex-col items-center gap-12 w-full max-w-sm h-11/12'>

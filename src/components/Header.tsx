@@ -1,4 +1,4 @@
-import bgImg from '../assets/bg-img.png';
+import bgImg from '../assets/bg-image.png';
 
 const Header = () => {
   return (

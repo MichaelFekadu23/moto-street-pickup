@@ -1,5 +1,5 @@
 import React, { type ReactNode } from 'react';
-import frame from '../assets/Frame.png'; // Make sure this path is correct
+// import frame from '../assets/Frame.png'; // Make sure this path is correct
 
 interface MainContentWrapperProps {
   children: ReactNode;

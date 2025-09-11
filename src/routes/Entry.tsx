@@ -10,8 +10,9 @@ import { useForm, type SubmitHandler } from 'react-hook-form';
 
 type FormValues = { name: string; phone: string };
 
-const API = import.meta.env.VITE_API_BASE_URL; // e.g. https://api.moto.example
+const API = import.meta.env.VITE_API_BASE_URL;
 
+// ---------- helpers ----------
 async function postJSON<T>(path: string, body: unknown, timeoutMs = 15000): Promise<T> {
   const controller = new AbortController();
   const t = setTimeout(() => controller.abort(), timeoutMs);
@@ -23,18 +24,74 @@ async function postJSON<T>(path: string, body: unknown, timeoutMs = 15000): Prom
       signal: controller.signal,
     });
     const data = await res.json().catch(() => ({}));
-    if (!res.ok) throw new Error(data?.message || `HTTP ${res.status}`);
+    if (!res.ok) throw new Error((data as any)?.message || `HTTP ${res.status}`);
     return data as T;
-  } finally { clearTimeout(t); }
+  } finally {
+    clearTimeout(t);
+  }
 }
 
-type QRResp = {
-  driverId: string;
-  driverName: string;
-  plateNumber: string;
-  vehicleModel?: string;
-  qrStatus: 'ACTIVE' | 'INACTIVE' | 'EXPIRED';
+const readLS = (k: string) => {
+  try {
+    const v = localStorage.getItem(k);
+    return v && v !== 'null' && v !== 'undefined' ? v : '';
+  } catch {
+    return '';
+  }
 };
+
+// ---------- API shapes & normalizer ----------
+type DriverProfileAPI = {
+  driver_id: string;
+  driver_name: string;
+  plate_number: string;
+  vehicle_model?: string;
+  photo_url?: string;
+  street_mode_active?: boolean;
+};
+
+type QRFlatAPI = {
+  valid: boolean;
+  message: string;
+  driver_profile?: DriverProfileAPI;
+};
+
+type QRWrappedAPI = {
+  ok: boolean;
+  data: QRFlatAPI;
+};
+
+type QRNormalized = {
+  valid: boolean;
+  message: string;
+  driver?: {
+    driverId: string;
+    driverName: string;
+    plateNumber: string;
+    vehicleModel?: string;
+    photoUrl?: string;
+    streetModeActive?: boolean;
+  };
+};
+
+function normalizeQR(raw: QRWrappedAPI | QRFlatAPI): QRNormalized {
+  const payload: QRFlatAPI = (raw as QRWrappedAPI).data ? (raw as QRWrappedAPI).data : (raw as QRFlatAPI);
+  const dp = payload.driver_profile;
+  return {
+    valid: Boolean(payload.valid),
+    message: payload.message ?? '',
+    driver: dp
+      ? {
+          driverId: dp.driver_id,
+          driverName: dp.driver_name,
+          plateNumber: dp.plate_number,
+          vehicleModel: dp.vehicle_model,
+          photoUrl: dp.photo_url,
+          streetModeActive: dp.street_mode_active,
+        }
+      : undefined,
+  };
+}
 
 type InitiateResp = {
   rideId: string;
@@ -52,18 +109,27 @@ const Entry = () => {
   const [qrError, setQrError] = useState<string | null>(null);
   const [validating, setValidating] = useState(false);
 
-  // RHF
+  // React Hook Form
   const {
     register,
     handleSubmit,
     formState: { errors, isValid, isSubmitting },
+    reset,
   } = useForm<FormValues>({
     mode: 'onChange',
     defaultValues: {
-      name: localStorage.getItem('moto_name') ?? '',
-      phone: localStorage.getItem('moto_phone') ?? '',
+      name: readLS('moto_name'),
+      phone: readLS('moto_phone'),
     },
   });
+
+  // Ensure fields populate from localStorage on mount
+  useEffect(() => {
+    reset({
+      name: readLS('moto_name'),
+      phone: readLS('moto_phone'),
+    });
+  }, [reset]);
 
   // Validate QR and load driver info
   useEffect(() => {
@@ -73,15 +139,23 @@ const Entry = () => {
       try {
         setValidating(true);
         setQrError(null);
-        // Prefer POST /street/validate-qr; switch to GET /qr/validate/{token} if needed
-        const r = await postJSON<QRResp>('/street/validate-qr', { token });
+
+        // Accept either wrapped or flat swagger payloads
+        const raw = await postJSON<QRWrappedAPI | QRFlatAPI>('/street/validate-qr', { token });
+        const r = normalizeQR(raw);
         if (cancelled) return;
-        if (r.qrStatus !== 'ACTIVE') {
-          setQrError('This driver is currently unavailable for street pickup.');
-        } else {
-          setDriverName(r.driverName);
-          setPlateNumber(r.plateNumber);
+
+        if (!r.valid) {
+          setQrError(r.message || 'Invalid QR code.');
+          return;
         }
+        if (r.driver && r.driver.streetModeActive === false) {
+          setQrError('This driver is currently unavailable for street pickup.');
+          return;
+        }
+
+        setDriverName(r.driver?.driverName ?? '—');
+        setPlateNumber(r.driver?.plateNumber ?? '—');
       } catch (e: any) {
         if (!cancelled) setQrError(e?.message ?? 'Failed to validate QR.');
       } finally {
@@ -92,16 +166,12 @@ const Entry = () => {
   }, [token]);
 
   const onSubmit: SubmitHandler<FormValues> = async ({ name, phone }) => {
+    console.log('Submitting', { name, phone });
     // persist for returning riders
     localStorage.setItem('moto_name', name);
     localStorage.setItem('moto_phone', phone);
 
-    const resp = await postJSON<InitiateResp>('/rider/initiate', {
-      token,
-      name,
-      phone,
-    });
-
+    const resp = await postJSON<InitiateResp>('/rider/initiate', { token, name, phone });
     localStorage.setItem('moto_rideId', resp.rideId);
     navigate(`/awaiting?rideId=${encodeURIComponent(resp.rideId)}`);
   };
@@ -120,21 +190,22 @@ const Entry = () => {
       </div>
 
       {/* QR error/banner */}
-      {!!qrError && (
+      {/* {!!qrError && (
         <div className="mt-4 w-full max-w-sm text-center text-sm text-red-400">
           {qrError}
         </div>
-      )}
+      )} */}
 
       {/* Form */}
-      <form
+      {!!qrError && <form
         onSubmit={handleSubmit(onSubmit)}
         className="w-full max-w-sm space-y-8 flex-shrink-0"
         noValidate
       >
         <InputField<FormValues>
-          id="name"
+          id="name" 
           type="text"
+          name='name'
           label="Name"
           register={register}
           rules={{
@@ -147,6 +218,7 @@ const Entry = () => {
         <InputField<FormValues>
           id="phone"
           type="tel"
+          name='phone'
           inputMode="tel"
           label="Phone"
           register={register}
@@ -164,19 +236,16 @@ const Entry = () => {
         <div className="flex flex-col w-full items-center justify-center gap-3 flex-shrink-0">
           <PrimaryButton
             title={
-              validating
-                ? 'Validating...'
-                : isSubmitting
-                ? 'Starting...'
-                : 'Start Ride'
+              'Start Ride'
             }
             type="submit"
             onclick={() => {}}
-            disabled={!isValid || isSubmitting || disableForm}
+            disabled={!isValid || isSubmitting }
           />
           <Footer text="Powered by Moto street pickup" />
         </div>
       </form>
+      }
     </MainContentWrapper>
   );
 };

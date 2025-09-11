@@ -13,7 +13,7 @@ const MainContentWrapper: React.FC<MainContentWrapperProps> = ({ children }) => 
         backgroundImage: `url(${frame})`, // Replace '' with frame if you want to use the image
         backgroundRepeat: 'repeat-x',
         backgroundSize: 'cover',
-        background: 'linear-gradient(180deg, rgba(16, 19, 28, 1) 0%, rgba(16, 19, 32, 0) 11.44%), linear-gradient(180deg, rgb(16, 19, 28) , rgba(255, 255, 255, 1) 157.97%)',
+        background: 'linear-gradient(180deg, rgba(16, 19, 24, 1) 0%, rgba(16, 19, 32, 0) 11.44%), linear-gradient(180deg, rgb(16, 19, 24) , rgba(255, 255, 255, 1) 157.97%)',
         // mixBlendMode: 'luminosity'
       }}
     >

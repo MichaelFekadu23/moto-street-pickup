@@ -176,7 +176,7 @@ const Entry = () => {
     navigate(`/awaiting?rideId=${encodeURIComponent(resp.rideId)}`);
   };
 
-  const disableForm = !!qrError || validating;
+  // const disableForm = !!qrError || validating;
 
   return (
     <MainContentWrapper>

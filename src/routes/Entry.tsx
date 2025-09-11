@@ -1,38 +1,182 @@
+// routes/Entry.tsx
 import MainContentWrapper from '../components/MianContentWrapper';
 import PrimaryButton from '../components/PrimaryButton';
 import LogoAndDriverInfo from '../components/LogoAndDriverInfo';
 import InputField from '../components/InputField';
 import Footer from '../components/Footer';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useEffect, useMemo, useState } from 'react';
+import { useForm, type SubmitHandler } from 'react-hook-form';
+
+type FormValues = { name: string; phone: string };
+
+const API = import.meta.env.VITE_API_BASE_URL; // e.g. https://api.moto.example
+
+async function postJSON<T>(path: string, body: unknown, timeoutMs = 15000): Promise<T> {
+  const controller = new AbortController();
+  const t = setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    const res = await fetch(`${API}${path}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+      signal: controller.signal,
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(data?.message || `HTTP ${res.status}`);
+    return data as T;
+  } finally { clearTimeout(t); }
+}
+
+type QRResp = {
+  driverId: string;
+  driverName: string;
+  plateNumber: string;
+  vehicleModel?: string;
+  qrStatus: 'ACTIVE' | 'INACTIVE' | 'EXPIRED';
+};
+
+type InitiateResp = {
+  rideId: string;
+  status: 'PENDING_DRIVER' | 'IN_PROGRESS' | 'COMPLETED' | 'CANCELLED';
+  driverId: string;
+};
 
 const Entry = () => {
   const navigate = useNavigate();
-  const handleStartRide = () => {
-    // navigate to AwaitingDriverConfirm page
-    navigate('/awaiting');   
+  const [sp] = useSearchParams();
+  const token = useMemo(() => sp.get('code') ?? '', [sp]);
+
+  const [driverName, setDriverName] = useState('—');
+  const [plateNumber, setPlateNumber] = useState('—');
+  const [qrError, setQrError] = useState<string | null>(null);
+  const [validating, setValidating] = useState(false);
+
+  // RHF
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isValid, isSubmitting },
+  } = useForm<FormValues>({
+    mode: 'onChange',
+    defaultValues: {
+      name: localStorage.getItem('moto_name') ?? '',
+      phone: localStorage.getItem('moto_phone') ?? '',
+    },
+  });
+
+  // Validate QR and load driver info
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      if (!token) { setQrError('Missing QR code. Please scan again.'); return; }
+      try {
+        setValidating(true);
+        setQrError(null);
+        // Prefer POST /street/validate-qr; switch to GET /qr/validate/{token} if needed
+        const r = await postJSON<QRResp>('/street/validate-qr', { token });
+        if (cancelled) return;
+        if (r.qrStatus !== 'ACTIVE') {
+          setQrError('This driver is currently unavailable for street pickup.');
+        } else {
+          setDriverName(r.driverName);
+          setPlateNumber(r.plateNumber);
+        }
+      } catch (e: any) {
+        if (!cancelled) setQrError(e?.message ?? 'Failed to validate QR.');
+      } finally {
+        if (!cancelled) setValidating(false);
+      }
+    })();
+    return () => { cancelled = true; };
+  }, [token]);
+
+  const onSubmit: SubmitHandler<FormValues> = async ({ name, phone }) => {
+    // persist for returning riders
+    localStorage.setItem('moto_name', name);
+    localStorage.setItem('moto_phone', phone);
+
+    const resp = await postJSON<InitiateResp>('/rider/initiate', {
+      token,
+      name,
+      phone,
+    });
+
+    localStorage.setItem('moto_rideId', resp.rideId);
+    navigate(`/awaiting?rideId=${encodeURIComponent(resp.rideId)}`);
   };
+
+  const disableForm = !!qrError || validating;
+
   return (
     <MainContentWrapper>
-      {/* Logo and Driver Info should take higher space */}
-      <div className="flex items-center justify-center w-full mt-12">
-        <LogoAndDriverInfo 
+      {/* Driver info */}
+      <div className="flex items-center justify-center w-full mt-14">
+        <LogoAndDriverInfo
           className="flex flex-col items-center justify-center"
-          driverName="Abebe"
-          plateNumber="AB123556" 
+          driverName={driverName}
+          plateNumber={plateNumber}
         />
       </div>
 
-      {/* Form */}
-      <div className="w-full max-w-sm space-y-8 flex-shrink-0">
-        <InputField type="text" label="Name" />
-        <InputField type="tel" label="Phone" />
-      </div>
+      {/* QR error/banner */}
+      {!!qrError && (
+        <div className="mt-4 w-full max-w-sm text-center text-sm text-red-400">
+          {qrError}
+        </div>
+      )}
 
-      {/* Buttons and Footer */}
-      <div className="flex flex-col w-full max-w-sm items-center justify-center gap-3 flex-shrink-0">
-        <PrimaryButton title="Start Ride" onclick={handleStartRide}/>
-        <Footer text="Powered by Moto street pickup" />
-      </div>
+      {/* Form */}
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="w-full max-w-sm space-y-8 flex-shrink-0"
+        noValidate
+      >
+        <InputField<FormValues>
+          id="name"
+          type="text"
+          label="Name"
+          register={register}
+          rules={{
+            required: 'Name is required',
+            minLength: { value: 2, message: 'At least 2 characters' },
+          }}
+          error={errors.name}
+        />
+
+        <InputField<FormValues>
+          id="phone"
+          type="tel"
+          inputMode="tel"
+          label="Phone"
+          register={register}
+          rules={{
+            required: 'Phone number is required',
+            pattern: {
+              value: /^\+?\d{9,15}$/,
+              message: 'Enter a valid phone number',
+            },
+          }}
+          error={errors.phone}
+        />
+
+        {/* Buttons and Footer */}
+        <div className="flex flex-col w-full items-center justify-center gap-3 flex-shrink-0">
+          <PrimaryButton
+            title={
+              validating
+                ? 'Validating...'
+                : isSubmitting
+                ? 'Starting...'
+                : 'Start Ride'
+            }
+            type="submit"
+            onclick={() => {}}
+            disabled={!isValid || isSubmitting || disableForm}
+          />
+          <Footer text="Powered by Moto street pickup" />
+        </div>
+      </form>
     </MainContentWrapper>
   );
 };

@@ -7,7 +7,7 @@ const Header = () => {
         className="absolute inset-0 bg-cover bg-center"
         style={{
           zIndex: 10,
-          backgroundImage: `linear-gradient(to bottom, rgba(16, 20, 28, 0.9) 0%, rgba(16, 20, 28, 0) 62%, rgba(16, 20, 28, 0.9) 100%), url(${bgImg})`,
+          backgroundImage: `linear-gradient(to bottom, rgba(16, 20, 28, 0.9) 0%, rgba(16, 20, 28, 0) 58%, rgba(16, 20, 28, 0.9) 100%), url(${bgImg})`,
           backgroundColor: '#10141C',
         }}
       />

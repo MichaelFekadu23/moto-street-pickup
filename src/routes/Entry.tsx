@@ -182,7 +182,7 @@ const Entry = () => {
   return (
     <MainContentWrapper>
       {/* Driver info */}
-      <div className="flex items-center justify-center w-full mt-14">
+      <div className="flex items-center justify-center w-full mt-8">
         <LogoAndDriverInfo
           className="flex flex-col items-center justify-center"
           driverName={driverName}

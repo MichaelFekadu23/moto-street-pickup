@@ -37,7 +37,7 @@ export default function InputField<TFormValues extends FieldValues>({
         <input
           id={inputId}
           type={type}
-          className="block w-full bg-transparent text-white placeholder-white/60 outline-none px-4 py-2"
+          className="block w-full bg-transparent text-white placeholder-white/60 outline-none px-4 py-[6px]"
           {...register(name, rules)}
           {...rest}
         />

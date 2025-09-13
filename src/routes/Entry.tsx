@@ -93,11 +93,11 @@ function normalizeQR(raw: QRWrappedAPI | QRFlatAPI): QRNormalized {
   };
 }
 
-type InitiateResp = {
-  rideId: string;
-  status: 'PENDING_DRIVER' | 'IN_PROGRESS' | 'COMPLETED' | 'CANCELLED';
-  driverId: string;
-};
+// type InitiateResp = {
+//   rideId: string;
+//   status: 'PENDING_DRIVER' | 'IN_PROGRESS' | 'COMPLETED' | 'CANCELLED';
+//   driverId: string;
+// };
 
 const Entry = () => {
   const navigate = useNavigate();
@@ -171,7 +171,8 @@ const Entry = () => {
     localStorage.setItem('moto_name', name);
     localStorage.setItem('moto_phone', phone);
 
-    const resp = await postJSON<InitiateResp>('/rider/initiate', { token, name, phone });
+    // const resp = await postJSON<InitiateResp>('/rider/initiate', { token, name, phone });
+    const resp = { rideId: 'test-ride-id-12345', status: 'PENDING_DRIVER', driverId: 'driver-123' }; // TODO: remove mock
     localStorage.setItem('moto_rideId', resp.rideId);
     navigate(`/awaiting?rideId=${encodeURIComponent(resp.rideId)}`);
   };

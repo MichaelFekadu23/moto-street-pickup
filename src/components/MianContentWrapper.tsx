@@ -3,9 +3,10 @@ import frame from '../assets/Frame.png'; // Make sure this path is correct
 
 interface MainContentWrapperProps {
   children: ReactNode;
+  gap?: string; // Optional gap prop
 }
 
-const MainContentWrapper: React.FC<MainContentWrapperProps> = ({ children }) => {
+const MainContentWrapper: React.FC<MainContentWrapperProps> = ({ children, gap }) => {
   return (
     <div
       className="relative flex-[1] flex flex-col items-center justify-between px-4 sm:px-6 md:px-8"
@@ -17,7 +18,7 @@ const MainContentWrapper: React.FC<MainContentWrapperProps> = ({ children }) => 
         // mixBlendMode: 'luminosity'
       }}
     >
-      <div className='flex flex-col items-center gap-10 w-full max-w-sm '>
+      <div className={`flex flex-col items-center w-full max-w-sm ${gap ? `gap-${gap}` : 'gap-10'}`}>
         {children}
       </div>
     </div>

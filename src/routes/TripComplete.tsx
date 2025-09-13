@@ -6,7 +6,7 @@ import Share from '../assets/share.svg';
 
 const AwaitingDriverConfirm = () => {
   return (
-    <MainContentWrapper gap='10'>        
+    <MainContentWrapper gap='9'>        
       {/* Logo + Driver Info */}
       <div className="flex items-center justify-center w-full mt-10">
         <div className={`flex flex-col items-center justify-center`}>

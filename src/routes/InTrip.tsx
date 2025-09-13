@@ -15,7 +15,7 @@ const Entry = () => {
       {/* Logo and Driver Info should take higher space */}
       <div className="flex flex-col gap-4 items-center justify-center w-full mt-10">
         <div>
-        <img src={logo} alt="Logo" className="h-8 sm:h-12" />
+        <img src={logo} alt="Logo" className="w-[120px] h-[27.72px]" />
         </div>
         <div className="text-white text-center">
           <p className="font-semibold text-[24px] uppercase">

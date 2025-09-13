@@ -10,7 +10,7 @@ const AwaitingDriverConfirm = () => {
       {/* Logo + Driver Info */}
       <div className="flex items-center justify-center w-full mt-10">
         <div className={`flex flex-col items-center justify-center`}>
-          <img src={logo} alt="Logo" className="h-10 sm:h-12" />
+          <img src={logo} alt="Logo" className="w-[120px] h-[27.72px]" />
           <div className="text-white text-center mt-5">
             <p className="text-lg sm:text-xl">Your Trip: 4.5km | 12mins</p>
             <p className="text-[#01C705] font-semibold">ETB 150</p>

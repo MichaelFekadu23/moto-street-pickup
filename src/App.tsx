@@ -6,21 +6,29 @@ import AwaitingDriverConfirm from './routes/AwaitingDriverConfirm';
 import InTrip from './routes/InTrip';
 import TripComplete from './routes/TripComplete';
 import Receipt from './routes/Receipt';
+import { DriverProvider } from './features/driver/DriverContext';
+import { RiderProvider } from './features/rider/riderContext';
+import { RideRejected } from './routes/RideRejected';
 
 function App() {
   return (
-    <Router>
-      <Layout>
-        <Routes>
-          <Route path="/" element={<Entry />} />
-          <Route path="/awaiting" element={<AwaitingDriverConfirm />} />
-          <Route path="/trip" element={<InTrip />} />
-          <Route path="/trip-complete" element={<TripComplete />} />
-          <Route path="/receipt" element={<Receipt />} />
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
-      </Layout>
-    </Router>
+    <DriverProvider>
+      <RiderProvider>
+        <Router>
+          <Layout>
+            <Routes>
+              <Route path="/" element={<Entry />} />
+              <Route path="/awaiting" element={<AwaitingDriverConfirm />} />
+              <Route path="/trip" element={<InTrip />} />
+              <Route path="/trip-complete" element={<TripComplete />} />
+              <Route path="/receipt" element={<Receipt />} />
+              <Route path="*" element={<Navigate to="/" replace />} />
+              <Route path='/ride-rejected' element={<RideRejected />} />
+            </Routes>
+          </Layout>
+        </Router>
+      </RiderProvider>
+    </DriverProvider>
   );
 }
 

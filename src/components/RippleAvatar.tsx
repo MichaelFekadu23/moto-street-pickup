@@ -2,7 +2,12 @@
 import { motion, useReducedMotion } from 'framer-motion';
 import Profile from '../assets/profile-pic.png';
 
-function Ripple({ delay = 0 }) {
+interface RippleProps {
+  photoUrl?: string;
+  delay?: number;
+}
+
+function Ripple({ delay = 0 }: RippleProps) {
   return (
     <motion.span
       className="absolute inset-0 rounded-full ring-2 ring-white/20 pointer-events-none"
@@ -19,7 +24,7 @@ function Ripple({ delay = 0 }) {
   );
 }
 
-export default function RippleAvatar() {
+export default function RippleAvatar({ photoUrl = Profile }: RippleProps) {
   const prefersReduced = useReducedMotion();
 
   return (
@@ -38,7 +43,7 @@ export default function RippleAvatar() {
 
       {/* Avatar */}
       <img
-        src={Profile}
+        src={photoUrl}
         alt="Profile"
         className="relative z-10 h-20 w-20 rounded-full object-cover"
       />

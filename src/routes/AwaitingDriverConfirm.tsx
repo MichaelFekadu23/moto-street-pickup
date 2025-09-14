@@ -3,42 +3,49 @@ import LogoAndDriverInfo from '../components/LogoAndDriverInfo';
 import Footer from '../components/Footer';
 import RippleAvatar from '../components/RippleAvatar';
 import { useNavigate } from 'react-router-dom';
-import { useEffect } from 'react';
+import { useDriver } from '../features/driver/DriverContext';
+import { useAwaitingDriverAcceptHybrid } from '../features/rideStatus/useAwaitingDriverAcceptHybrid';
 
 const AwaitingDriverConfirm = () => {
+  const { profile } = useDriver();
   const navigate = useNavigate();
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      navigate('/trip'); // Navigate to InTrip after 5 seconds
-    }, 5000);
-    return () => clearTimeout(timer);
-  }, [navigate]);
+
+  const rideId = localStorage.getItem('moto_rideId') || '';
+
+  const { status, wsConnected } = useAwaitingDriverAcceptHybrid({
+    rideId,
+    onAccepted: () => navigate('/trip'),
+    onRejected: () => navigate('/ride-rejected'),
+    pollMs: 2000,
+    usePollingFallback: true, // set to false if you want WS-only
+  });
+  console.log('Ride status:', status, 'WS connected:', wsConnected);
+
   return (
-    <MainContentWrapper>        
-        {/* Logo + Driver Info */}
+    <MainContentWrapper>
+      {/* Driver summary */}
       <div className="flex items-center justify-center w-full mt-8">
-        <LogoAndDriverInfo 
+        <LogoAndDriverInfo
           className="flex flex-col items-center justify-center"
-          driverName="Abebe"
-          plateNumber="AB123556" 
+          driverName={profile?.driverName || '—'}
+          plateNumber={profile?.plateNumber || '—'}
         />
       </div>
 
-      {/* Profile + Awaiting Message */}
+      {/* Avatar + message */}
       <div className="flex flex-col items-center justify-center">
         <RippleAvatar />
       </div>
+
       <div className="flex flex-col gap-4">
         <div className="text-white text-center">
-          <p className="font-semibold text-[20px] uppercase">
-            AWAITING DRIVER
-          </p>
-          <p className="font-semibold text-[20px] uppercase">
-            CONFIRMATION!
-          </p>
+          <p className="font-semibold text-[20px] uppercase">AWAITING DRIVER</p>
+          <p className="font-semibold text-[20px] uppercase">CONFIRMATION!</p>
+          {/* <p className="text-xs opacity-70 mt-2">{wsConnected ? 'Live via WebSocket' : 'Using fallback'}</p>
+          <p className="text-xs opacity-70">{`Status: ${status}`}</p> */}
         </div>
 
-        {/* Footer stays at bottom */}
+        {/* Footer */}
         <div className="mt-auto">
           <Footer text="Powered by Moto street pickup" />
         </div>

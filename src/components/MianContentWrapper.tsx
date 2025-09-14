@@ -14,7 +14,7 @@ const MainContentWrapper: React.FC<MainContentWrapperProps> = ({ children, gap }
         backgroundImage: `url(${frame})`, // Replace '' with frame if you want to use the image
         backgroundRepeat: 'repeat-x',
         backgroundSize: 'cover',
-        background: 'linear-gradient(to bottom, rgba(16, 20, 27, 0.9), rgba(16, 20, 28, 0) 30%), linear-gradient(180deg, rgb(16, 19, 26) , rgba(255, 255, 255, 1) 147.97%)',
+        background: 'linear-gradient(to bottom, rgba(16, 20, 29, 0.9), rgba(16, 20, 28, 0) 30%), linear-gradient(180deg, rgb(16, 19, 26) , rgba(255, 255, 255, 1) 165%)',
         // mixBlendMode: 'luminosity'
       }}
     >

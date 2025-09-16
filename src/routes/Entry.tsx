@@ -110,12 +110,12 @@ const Entry = () => {
     <MainContentWrapper>
       {validating ? (
         <div className="flex flex-col items-center justify-center w-full mt-8">
-          <img src={logo} alt="Logo" className="w-[120px] h-[27.72px]" />
+          <img src={logo} alt="Logo" className="w-[120px] h-[27.72px] md:w-[180px] md:h-[41.58px]" />
           <div className="mt-10 flex flex-col items-center justify-center w-full py-12 rounded-md max-w-sm text-center text-sm text-gray-300">
             <div className="flex justify-center items-center">
               <div className="h-6 w-6 animate-spin rounded-full border-2 border-white border-t-transparent"></div>
             </div>
-            <div className="mt-4 font-semibold text-[14px] uppercase">Validating QR code...</div>
+            <div className="mt-4 font-semibold text-[14px] md:text-lg uppercase">Validating QR code...</div>
           </div>
         </div>
       ) : (
@@ -132,7 +132,7 @@ const Entry = () => {
           {/* QR error/banner */}
           {!!qrError?.code && (
             <div
-              className={`mt-10 w-full py-12 px-3 font-semibold text-[14px] uppercase rounded-md max-w-sm text-center
+              className={`mt-10 w-full py-12 px-3 font-semibold text-[14px] md:text-lg uppercase rounded-md max-w-sm text-center
                 ${
                   qrError.code === 'QR_NOT_FOUND' || qrError.code === 'MISSING_QR'
                     ? 'text-red-400'

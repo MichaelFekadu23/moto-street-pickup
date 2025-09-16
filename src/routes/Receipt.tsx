@@ -40,11 +40,18 @@ const Receipt = () => {
   const currency = fare?.breakdown?.currency && fare.breakdown.currency.trim() !== '' ? fare.breakdown.currency : 'ETB';
   const total = fare?.total_fare ?? fare?.breakdown?.total_fare;
 
+  // save to localStorage for trip-complete page
+  useEffect(() => {
+    if (fare) {
+      localStorage.setItem('moto_fare', JSON.stringify(fare));
+    }
+  }, [fare]);
+
   return (
     <MainContentWrapper>
       {/* Header */}
       <div className="flex flex-col gap-4 items-center justify-center w-full mt-8">
-        <img src={logo} alt="Logo" className="w-[120px] h-[27.72px]" />
+        <img src={logo} alt="Logo" className="w-[120px] h-[27.72px] md:w-[180px] md:h-[41.58px]" />
         <div className="text-white text-center">
           <p className="font-semibold text-[24px] uppercase">TRIP</p>
           <p className="font-semibold text-[24px] uppercase">COMPLETED</p>

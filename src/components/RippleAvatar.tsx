@@ -1,6 +1,6 @@
 // RippleAvatar.tsx
 import { motion, useReducedMotion } from 'framer-motion';
-import Profile from '../assets/profile-pic.png';
+import Profile from '../assets/profile-pic.svg';
 
 interface RippleProps {
   photoUrl?: string;

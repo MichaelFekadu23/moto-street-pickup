@@ -47,7 +47,7 @@ const InTrip = () => {
         animate={{ scale: [1, 1.02, 1], opacity: [1, 0.95, 1] }}
         transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
       >
-        <img src={logo} alt="Logo" className="w-[120px] h-[27.72px]" />
+        <img src={logo} alt="Logo" className="w-[120px] h-[27.72px] md:w-[180px] md:h-[41.58px]" />
 
         {/* Shimmering text */}
         <motion.p

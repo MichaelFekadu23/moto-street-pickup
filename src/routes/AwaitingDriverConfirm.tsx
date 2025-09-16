@@ -34,7 +34,7 @@ const AwaitingDriverConfirm = () => {
 
       {/* Avatar + message */}
       <div className="flex flex-col items-center justify-center">
-        <RippleAvatar />
+        <RippleAvatar photoUrl={profile?.photoUrl} />
       </div>
 
       <div className="flex flex-col gap-4">

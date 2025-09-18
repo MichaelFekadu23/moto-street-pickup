@@ -4,7 +4,7 @@ import Layout from './components/Layout';
 import Entry from './routes/Entry';
 import AwaitingDriverConfirm from './routes/AwaitingDriverConfirm';
 import InTrip from './routes/InTrip';
-import TripComplete from './routes/TripComplete';
+import TripCompleted from './routes/TripCompleted';
 import Receipt from './routes/Receipt';
 import { DriverProvider } from './features/driver/DriverContext';
 import { RiderProvider } from './features/rider/riderContext';
@@ -20,7 +20,7 @@ function App() {
               <Route path="/" element={<Entry />} />
               <Route path="/awaiting" element={<AwaitingDriverConfirm />} />
               <Route path="/trip" element={<InTrip />} />
-              <Route path="/trip-complete" element={<TripComplete />} />
+              <Route path="/trip-completed" element={<TripCompleted />} />
               <Route path="/receipt" element={<Receipt />} />
               <Route path="*" element={<Navigate to="/" replace />} />
               <Route path='/ride-rejected' element={<RideRejected />} />

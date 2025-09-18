@@ -114,7 +114,7 @@ const Receipt = () => {
 
       {/* Pay CTA + footer */}
       <div className="flex flex-col w-full max-w-sm items-center justify-center gap-3 flex-shrink-0">
-        <Link to="/trip-complete" className="w-full">
+        <Link to="/trip-completed" className="w-full">
           <button
             className="relative w-full bg-black py-3 px-4 rounded-lg font-semibold text-white hover:bg-gray-800 transition-colors flex items-center justify-center gap-3 disabled:opacity-50"
             disabled={loading || !!err}

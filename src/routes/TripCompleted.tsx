@@ -23,8 +23,8 @@ const AwaitingDriverConfirm = () => {
         {/* Logo + Driver Info */}
         <div className="flex items-center justify-center w-full mt-10">
           <div className={`flex flex-col items-center justify-center`}>
-            <img src={logo} alt="Logo" className="w-[120px] h-[27.72px]" />
-            <div className="text-white text-center mt-5">
+            <img src={logo} alt="Logo" className="w-[120px] h-[27.72px] md:w-[180px] md:h-[41.58px]" />
+            <div className="text-white text-center mt-5 flex flex-col gap-1">
               <p className="text-lg sm:text-xl">Your Trip: {fareObj?.distance_km} Km | {fareObj?.duration_minutes} Mins</p>
               <p className="text-[#01C705] font-semibold">ETB {fareObj?.breakdown?.total_fare}</p>
               <p className="text-lg sm:text-xl">Paid Via Card</p>

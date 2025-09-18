@@ -3,8 +3,20 @@ import logo from '../assets/logo.svg';
 import Footer from '../components/Footer';
 import Completed from '../assets/completed.png';
 import Share from '../assets/share.svg';
+import type { FareResponse } from '../features/rides/fare';
 
 const AwaitingDriverConfirm = () => {
+  // get ride fare from localStorage
+  const fare = localStorage.getItem('moto_fare');
+  let fareObj: FareResponse | null = null;
+  if (fare) {
+    try {
+      fareObj = JSON.parse(fare);
+    } catch (e) {
+      fareObj = null;
+    }
+  }
+
   return (
     <MainContentWrapper>
       <div className="flex flex-col gap-8 w-full max-w-sm">     
@@ -13,8 +25,8 @@ const AwaitingDriverConfirm = () => {
           <div className={`flex flex-col items-center justify-center`}>
             <img src={logo} alt="Logo" className="w-[120px] h-[27.72px]" />
             <div className="text-white text-center mt-5">
-              <p className="text-lg sm:text-xl">Your Trip: 4.5km | 12mins</p>
-              <p className="text-[#01C705] font-semibold">ETB 150</p>
+              <p className="text-lg sm:text-xl">Your Trip: {fareObj?.distance_km} Km | {fareObj?.duration_minutes} Mins</p>
+              <p className="text-[#01C705] font-semibold">ETB {fareObj?.breakdown?.total_fare}</p>
               <p className="text-lg sm:text-xl">Paid Via Card</p>
             </div>
           </div>

@@ -5,12 +5,14 @@ export type RideStatus =
   | 'en_route'
   | 'in_progress'
   | 'trip_completed'      // <-- add this
-  | 'completed'           // (keep if backend also uses this)
+  | 'completed'
+  | 'rejected'            // (keep if backend also uses this)
   | 'cancelled';
 
 export type RideSessionResp = {
-  data: { status: RideStatus};
+  data: { status: RideStatus };
   ride_id: string;
+  // status: RideStatus;
 };
 
 export async function fetchRideSession(rideId: string) {

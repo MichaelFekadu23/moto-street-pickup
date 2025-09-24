@@ -184,7 +184,8 @@ const Entry = () => {
 
               {/* Optional root-level error display (doesn't change layout) */}
               {errors.root?.message && (
-                <div className="text-red-400 text-sm font-medium -mt-2">{String(errors.root.message)}</div>
+                console.log(errors.root),
+                <div className="text-red-400 text-sm font-medium -mt-2">{String(errors.root.message).includes('500') ? 'Internal server error' : String(errors.root.message)}</div>
               )}
 
               <div className="flex flex-col w-full items-center justify-center gap-3 flex-shrink-0">

@@ -1,9 +1,9 @@
 import { useEffect, useMemo, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import MainContentWrapper from '../components/MianContentWrapper';
 import logo from '../assets/logo.svg';
 import Footer from '../components/Footer';
 import pay from '../assets/pay.svg';
-import { Link } from 'react-router-dom';
 import { fetchRideFare, type FareResponse } from '../features/rides/fare';
 
 function round(n: number, dp = 1) {
@@ -11,11 +11,51 @@ function round(n: number, dp = 1) {
   return Math.round(n * f) / f;
 }
 
+type PaymentResponse = {
+  message: string;
+  method: string;
+  paid: boolean;
+  processed_at: string;
+  ride_id: string;
+};
+
+const BASE = import.meta.env.VITE_API_BASE_URL; // must be HTTPS in production
+
+async function processPayment(rideId: string, method: string, token?: string): Promise<PaymentResponse> {
+  const res = await fetch(`${BASE}/street-ride/payment`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    },
+    credentials: 'include', // remove if you don't rely on cookies
+    body: JSON.stringify({ ride_id: rideId, method }),
+  });
+  if (!res.ok) {
+    const msg = await res.text().catch(() => '');
+    throw new Error(`Payment failed (${res.status}) ${msg}`);
+  }
+  return res.json();
+}
+
 const Receipt = () => {
+  const navigate = useNavigate();
+
+  // from your flow; adjust key names if different
   const rideId = useMemo(() => localStorage.getItem('moto_rideId') || '', []);
+  const paymentMethod = useMemo(
+    () => localStorage.getItem('moto_payment_method') || 'cash', // fallback to 'cash'
+    []
+  );
+
   const [fare, setFare] = useState<FareResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [err, setErr] = useState<string | null>(null);
+
+  // paying state
+  const [paying, setPaying] = useState(false);
+  const [payErr, setPayErr] = useState<string | null>(null);
 
   useEffect(() => {
     let alive = true;
@@ -46,6 +86,23 @@ const Receipt = () => {
       localStorage.setItem('moto_fare', JSON.stringify(fare));
     }
   }, [fare]);
+
+  const onPay = async () => {
+    if (!rideId) return;
+    setPayErr(null);
+    setPaying(true);
+    try {
+      const res = await processPayment(rideId, paymentMethod /* , authToken? */);
+      if (!res.paid) throw new Error('Payment not marked as paid.');
+      // persist for the next screen if needed
+      localStorage.setItem('moto_payment', JSON.stringify(res));
+      navigate('/trip-completed', { replace: true });
+    } catch (e: any) {
+      setPayErr(e?.message || 'Payment failed');
+    } finally {
+      setPaying(false);
+    }
+  };
 
   return (
     <MainContentWrapper>
@@ -78,30 +135,6 @@ const Receipt = () => {
               <span className="text-white/90 font-normal text-[16px]">Time :</span>
               <span className="text-white">{Math.round(fare!.duration_minutes)} mins</span>
             </div>
-
-            {/* <div className="h-px bg-white/20 my-2" /> */}
-
-            {/* <div className="flex justify-between mb-1">
-              <span className="text-white/70 text-sm">Base fare</span>
-              <span className="text-white/80 text-sm">
-                {currency} {fare!.breakdown.base_fare}
-              </span>
-            </div>
-            <div className="flex justify-between mb-1">
-              <span className="text-white/70 text-sm">Distance fare</span>
-              <span className="text-white/80 text-sm">
-                {currency} {fare!.breakdown.distance_fare}
-              </span>
-            </div>
-            <div className="flex justify-between mb-3">
-              <span className="text-white/70 text-sm">Time fare</span>
-              <span className="text-white/80 text-sm">
-                {currency} {fare!.breakdown.time_fare}
-              </span>
-            </div> */}
-
-            {/* <div className="h-px bg-white/20 my-2" /> */}
-
             <div className="flex justify-between">
               <span className="text-white/90 font-normal text-[16px]">Total :</span>
               <span className="text-white/90 font-normal">
@@ -114,18 +147,21 @@ const Receipt = () => {
 
       {/* Pay CTA + footer */}
       <div className="flex flex-col w-full max-w-sm items-center justify-center gap-3 flex-shrink-0">
-        <Link to="/trip-completed" className="w-full">
-          <button
-            className="relative w-full bg-black py-3 px-4 rounded-lg font-semibold text-white hover:bg-gray-800 transition-colors flex items-center justify-center gap-3 disabled:opacity-50"
-            disabled={loading || !!err}
-            aria-disabled={loading || !!err}
-          >
-            <img src={pay} className="h-5 w-5" alt="Pay Icon" />
-            <span className="text-center font-semibold text-[14px]">
-              {loading ? 'Loading fare…' : 'Pay Now'}
-            </span>
-          </button>
-        </Link>
+        <button
+          onClick={onPay}
+          className="relative w-full bg-black py-3 px-4 rounded-lg font-semibold text-white hover:bg-gray-800 transition-colors flex items-center justify-center gap-3 disabled:opacity-50"
+          // disabled={loading || !!err || paying || !rideId}
+          aria-disabled={loading || !!err || paying || !rideId}
+          title={!rideId ? 'Missing ride id' : undefined}
+        >
+          <img src={pay} className="h-5 w-5" alt="Pay Icon" />
+          <span className="text-center font-semibold text-[14px]">
+            {loading ? 'Loading fare…' : paying ? 'Processing…' : `Pay Now`}
+          </span>
+        </button>
+
+        {payErr && <div className="text-red-600 text-center text-sm">{payErr}</div>}
+
         <Footer text="Powered by Moto street pickup" />
       </div>
     </MainContentWrapper>

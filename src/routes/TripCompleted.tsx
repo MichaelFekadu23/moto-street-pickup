@@ -4,7 +4,6 @@ import logo from '../assets/logo.svg';
 import Footer from '../components/Footer';
 import Completed from '../assets/completed.png';
 import Share from '../assets/share.svg';
-import PrimaryButton from '../components/PrimaryButton';
 import { useShareReceipt } from '../features/receipt/useShareReceipt';
 import type { FareResponse } from '../features/rides/fare';
 import { LoadingDots } from '../components/LoadingDots';

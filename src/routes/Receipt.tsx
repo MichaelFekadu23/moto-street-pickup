@@ -5,6 +5,7 @@ import logo from '../assets/logo.svg';
 import Footer from '../components/Footer';
 import pay from '../assets/pay.svg';
 import { fetchRideFare, type FareResponse } from '../features/rides/fare';
+import { LoadingDots } from '../components/LoadingDots';
 
 function round(n: number, dp = 1) {
   const f = Math.pow(10, dp);
@@ -17,6 +18,7 @@ type PaymentResponse = {
   paid: boolean;
   processed_at: string;
   ride_id: string;
+  error?: { message: string }
 };
 
 const BASE = import.meta.env.VITE_API_BASE_URL; // must be HTTPS in production
@@ -31,7 +33,7 @@ async function processPayment(rideId: string, method: string): Promise<PaymentRe
     body: JSON.stringify({ ride_id: rideId, method }),
   });
   if (!res.ok) {
-    const msg = await res.text().catch(() => '');
+    const msg = await res.json().then((data) => data.error?.message || 'Unknown error');
     throw new Error(`Payment failed (${res.status}) ${msg}`);
   }
   return res.json();
@@ -90,7 +92,7 @@ const Receipt = () => {
     setPayErr(null);
     setPaying(true);
     try {
-      const res = await processPayment(rideId, paymentMethod /* , authToken? */);
+      const res = await processPayment(rideId, paymentMethod);
       if (!res.paid) throw new Error('Payment not marked as paid.');
       // persist for the next screen if needed
       localStorage.setItem('moto_payment', JSON.stringify(res));
@@ -152,10 +154,14 @@ const Receipt = () => {
           aria-disabled={loading || !!err || paying || !rideId}
           title={!rideId ? 'Missing ride id' : undefined}
         >
-          <img src={pay} className="h-5 w-5" alt="Pay Icon" />
-          <span className="text-center font-semibold text-[14px]">
-            {loading ? 'Loading fare…' : paying ? 'Processing…' : `Pay Now`}
-          </span>
+          {paying ? <LoadingDots /> : (
+            <>
+              <img src={pay} className="h-5 w-5" alt="Pay Icon" />
+              <span className="text-center font-semibold text-[14px]">
+                {loading ? 'Loading fare…' : `Pay Now`}
+              </span>
+            </>
+          )}
         </button>
 
         {payErr && <div className="text-red-600 text-center text-sm">{payErr}</div>}

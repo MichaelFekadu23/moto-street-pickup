@@ -21,15 +21,13 @@ type PaymentResponse = {
 
 const BASE = import.meta.env.VITE_API_BASE_URL; // must be HTTPS in production
 
-async function processPayment(rideId: string, method: string, token?: string): Promise<PaymentResponse> {
+async function processPayment(rideId: string, method: string): Promise<PaymentResponse> {
   const res = await fetch(`${BASE}/street-ride/payment`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
-      ...(token ? { Authorization: `Bearer ${token}` } : {}),
     },
-    credentials: 'include', // remove if you don't rely on cookies
     body: JSON.stringify({ ride_id: rideId, method }),
   });
   if (!res.ok) {

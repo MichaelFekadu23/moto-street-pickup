@@ -62,7 +62,7 @@ const TripCompleted = () => {
                 Your Trip: {fareObj?.distance_km} Km | {fareObj?.duration_minutes} Mins
               </p>
               <p className="text-[#01C705] font-semibold">ETB {fareObj?.breakdown?.total_fare}</p>
-              <p className="text-lg sm:text-xl">Paid Via Card</p>
+              <p className="text-lg sm:text-xl">Paid Via Cash</p>
             </div>
           </div>
         </div>

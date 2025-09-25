@@ -3,50 +3,22 @@ import type { Receipt } from "./type";
 
 export function formatReceiptText(r: Receipt) {
   const money = (n: number) => `${r.currency} ${n.toFixed(2)}`;
-  const fmtDate = (s: string) =>
-    new Date(s).toLocaleString(undefined, { dateStyle: "medium", timeStyle: "short" });
-
   return [
-    "==============================",
-    "        🚖 MOTO RECEIPT       ",
-    "==============================",
-
-    `Ride ID:     ${r.ride_id}`,
-    `Generated:   ${fmtDate(r.generated_at)}`,
-
-    "------------------------------",
-
-    `👤 Rider:    ${r.rider_name}`,
-    `🧑‍✈️ Driver:  ${r.driver_name} (${r.driver_id})`,
-    `🚗 Vehicle:  ${r.vehicle_model}`,
-    `🔖 Plate:    ${r.plate_number}`,
-
-    "------------------------------",
-
-    `📍 Start:    ${fmtDate(r.start_time)}`,
-    `${r.start_location}`,
-
-    "", // blank line for spacing
-
-    `📍 End:      ${fmtDate(r.end_time)}`,
-    `${r.end_location}`,
-
-    "------------------------------",
-
-    `Distance:    ${r.distance} km`,
-    `Duration:    ${r.duration} min`,
-
-    "------------------------------",
-
-    `💳 Payment:  ${r.payment_method}`,
-    `💰 Fare:     ${money(r.fare)}`,
-
-    "==============================",
-    " Powered by Moto Street Pickup ",
-    "==============================",
-  ].join("\n\n"); // <-- add double newlines for spacing
+    `Ride Receipt – ${r.ride_id}`,
+    `Generated: ${new Date(r.generated_at).toLocaleString()}`,
+    "",
+    `Rider: ${r.rider_name}`,
+    `Driver: ${r.driver_name} (${r.driver_id})`,
+    `Vehicle: ${r.vehicle_model} • Plate: ${r.plate_number}`,
+    "",
+    `Start:  ${new Date(r.start_time).toLocaleString()} @ ${r.start_location}`,
+    `End:    ${new Date(r.end_time).toLocaleString()} @ ${r.end_location}`,
+    `Distance: ${r.distance} km • Duration: ${r.duration} min`,
+    "",
+    `Payment Method: ${r.payment_method}`,
+    `Fare: ${money(r.fare)}`,
+  ].join("\n");
 }
-
 
 export async function shareReceipt(r: Receipt) {
   const text = formatReceiptText(r);

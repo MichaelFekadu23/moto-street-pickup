@@ -1,3 +1,5 @@
+// pages/InTrip.tsx
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 
@@ -7,7 +9,10 @@ import logo from "../assets/logo.svg";
 import Footer from "../components/Footer";
 import { useRider } from "../features/rider/riderContext";
 import { useDriver } from "../features/driver/DriverContext";
-import { useRideSessionPolling } from "../features/rideStatus/useRideSessoinPolling";
+
+// NEW: WebSocket-first status with polling fallback
+import { useRideStatus } from "../features/rideStatus/useRideStatus";
+
 
 function readLS(k: string) {
   try {
@@ -22,21 +27,54 @@ const InTrip = () => {
   const navigate = useNavigate();
   const { rider } = useRider();
   const { profile: driver } = useDriver();
+  const [confirming, setConfirming] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const riderName = rider?.name || readLS("moto_name") || "—";
   const plate = driver?.plateNumber || "—";
 
-  // get rideId saved after initiate
+  // IDs from storage/context
   const rideId = localStorage.getItem("moto_rideId") || "";
-  const { status } = useRideSessionPolling({ rideId, intervalMs: 2000 });
+  const phoneNumber = (localStorage.getItem("moto_phone") || rider?.phone || "").trim();
 
-  console.log("STATUS", status);
+  // WebSocket with polling fallback (no old polling hook)
+  const { status, wsConnected, wsError, pollError } = useRideStatus({
+    rideId,
+    phoneNumber,
+    pollMs: 3000,
+    usePollingFallback: true,   // fallback if WS is down
+    disableWebSocket: false,    // keep WS enabled
+  });
+
+  // enable the button only when the server says trip is completed
   const isTripCompleted = status === "trip_completed";
 
-  const handleCompleteRide = () => {
-    if (!isTripCompleted) return; // guard (button will be disabled anyway)
-    navigate("/receipt");
-  };
+  const handleCompleteRide = async () => {
+    if (!isTripCompleted) return;
+    if (confirming) return; // prevent double clicks
+    setConfirming(true);
+    setError(null);
+    const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/rider/${rideId}/confirm`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ confirmed: true, ride_id: rideId }),
+    });
+    setConfirming(false);
+    if (res.ok) {
+      navigate("/receipt");
+    } else {
+      const err = await res.json().then((data) => data.error?.message || "Failed to confirm trip end");
+      setError(err);
+    }
+  }
+
+  // Optional: debug log (remove if noisy)
+  useEffect(() => {
+    // eslint-disable-next-line no-console
+    console.log("[InTrip] status:", status, "ws:", wsConnected, "wsErr:", wsError, "pollErr:", pollError);
+  }, [status, wsConnected, wsError, pollError]);
 
   return (
     <MainContentWrapper>
@@ -88,10 +126,21 @@ const InTrip = () => {
         <PrimaryButton
           title={isTripCompleted ? "Confirm End Trip" : "Waiting for Driver to End…"}
           onclick={handleCompleteRide}
+          loading={confirming}
           disabled={!isTripCompleted}
         />
+        {error && <p className="text-red-600 text-sm text-center">{error}</p>}
         <Footer text="Powered by Moto street pickup" />
       </div>
+
+      {/* Optional dev-only status line — remove in prod */}
+      {/* {process.env.NODE_ENV === "development" && (
+        <div className="mt-4 text-center text-xs text-white/60">
+          WS: {wsConnected ? "🟢" : "🔴"} | Status: {status}
+          {wsError && <span className="text-red-400"> • WS error: {wsError}</span>}
+          {pollError && <span className="text-yellow-400"> • Poll: {pollError}</span>}
+        </div>
+      )} */}
     </MainContentWrapper>
   );
 };

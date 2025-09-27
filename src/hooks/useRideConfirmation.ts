@@ -20,7 +20,10 @@ export function useRideConfirmation({
   const { handleApiError } = useApiError();
 
   const confirmRideEnd = async () => {
-    if (confirming || !rideId) return;
+    if (confirming || !rideId){
+      setError('No ride to confirm or already confirming.');
+      return;
+    }
     
     setConfirming(true);
     setError(null);

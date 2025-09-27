@@ -44,7 +44,7 @@ export default function InputField<TFormValues extends FieldValues>({
       </fieldset>
 
       {error && (
-        <p className="text-sm text-red-400">{error.message}</p>
+        <p className="text-sm text-red-500">{error.message}</p>
       )}
     </div>
   );

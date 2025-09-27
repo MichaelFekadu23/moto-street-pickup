@@ -59,6 +59,7 @@ export async function shareReceipt(r: Receipt) {
     return { method: "clipboard" as const };
   } catch {
     // If clipboard also fails, throw error
-    throw new Error("Unable to share receipt. Please try again or contact support.");
+    // throw new Error("Unable to share receipt. Please try again or contact support.");
+    console.log("Sharing receipt failed at all methods.");
   }
 }

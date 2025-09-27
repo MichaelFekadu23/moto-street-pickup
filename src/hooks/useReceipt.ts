@@ -41,6 +41,8 @@ export function useReceipt({ rideId, autoFetch = true }: UseReceiptProps) {
       return null;
     } finally {
       setLoading(false);
+      // clear rideId from localStorage after fetching
+      localStorage.removeItem('moto_rideId');
     }
   };
 

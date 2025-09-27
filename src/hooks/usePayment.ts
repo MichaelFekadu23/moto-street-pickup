@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { rideApi, useApiError, type PaymentResponse } from '../services/apiService';
+import { clearCompletedTripData } from '../utils/clearCompletedTripData';
 
 interface UsePaymentProps {
   rideId: string;
@@ -47,6 +48,9 @@ export function usePayment({
         // Call success callback
         onSuccess?.(response.data);
 
+        // Clear ride info from localStorage
+        clearCompletedTripData();
+        
         // Navigate to success route
         navigate(successRoute, { replace: true });
       } else {

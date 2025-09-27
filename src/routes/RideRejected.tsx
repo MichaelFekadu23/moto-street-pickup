@@ -3,7 +3,7 @@ import LogoAndDriverInfo from "../components/LogoAndDriverInfo";
 import MainContentWrapper from "../components/MianContentWrapper";
 import { useNavigate } from "react-router-dom";
 import { XCircle } from "lucide-react"; // optional: red reject icon
-import { useDriver } from "../features/driver/DriverContext";
+import { useDriver } from "../features/ride/rideContext";
 
 export const RideRejected = () => {
   const navigate = useNavigate();

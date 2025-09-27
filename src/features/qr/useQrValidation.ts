@@ -3,7 +3,7 @@ import { requestJSON } from '../../lib/api';
 import type { QRValidateWrappedAPI, QRError } from './types';
 import { normalizeQR, mapInvalidMessageToError } from './normalize';
 
-import { useDriver } from '../driver/DriverContext';
+import { useDriver } from '../ride/rideContext';
 
 export function useQrValidation(token: string) {
   const [driverName, setDriverName] = useState('—');

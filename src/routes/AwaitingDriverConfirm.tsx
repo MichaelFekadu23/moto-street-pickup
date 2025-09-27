@@ -4,17 +4,17 @@ import LogoAndDriverInfo from "../components/LogoAndDriverInfo";
 import Footer from "../components/Footer";
 import RippleAvatar from "../components/RippleAvatar";
 import { useNavigate } from "react-router-dom";
-import { useDriver } from "../features/driver/DriverContext";
-import { useRider } from "../features/rider/riderContext";
+import { useDriver } from "../features/ride/rideContext";
+import { useRide } from "../features/ride/rideContext";
 import { useRideStatus } from "../features/rideStatus/useRideStatus";
 
 const AwaitingDriverConfirm = () => {
   const navigate = useNavigate();
   const { profile } = useDriver();
-  const { rider } = useRider();
+  const { rider, ride } = useRide();
 
-  const rideId = localStorage.getItem("moto_rideId") || "";
-  const phoneNumber = (localStorage.getItem("moto_phoneNumber") || rider?.phone || "").trim();
+  const rideId = localStorage.getItem("moto_rideId") || ride?.rideId || "";
+  const phoneNumber = (localStorage.getItem("moto_phone") || rider?.phone || "").trim();
 
   const { status, wsConnected, wsError, pollError } = useRideStatus({
     rideId,

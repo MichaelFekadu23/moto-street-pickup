@@ -6,29 +6,26 @@ import AwaitingDriverConfirm from './routes/AwaitingDriverConfirm';
 import InTrip from './routes/InTrip';
 import TripCompleted from './routes/TripCompleted';
 import Receipt from './routes/Receipt';
-import { DriverProvider } from './features/driver/DriverContext';
-import { RiderProvider } from './features/rider/riderContext';
 import { RideRejected } from './routes/RideRejected';
+import { RideProvider } from './features/ride/rideContext'; // Import the new unified context
 
 function App() {
   return (
-    <DriverProvider>
-      <RiderProvider>
-        <Router>
-          <Layout>
-            <Routes>
-              <Route path="/" element={<Entry />} />
-              <Route path="/awaiting" element={<AwaitingDriverConfirm />} />
-              <Route path="/trip" element={<InTrip />} />
-              <Route path="/trip-completed" element={<TripCompleted />} />
-              <Route path="/receipt" element={<Receipt />} />
-              <Route path="*" element={<Navigate to="/" replace />} />
-              <Route path='/ride-rejected' element={<RideRejected />} />
-            </Routes>
-          </Layout>
-        </Router>
-      </RiderProvider>
-    </DriverProvider>
+    <RideProvider>
+      <Router>
+        <Layout>
+          <Routes>
+            <Route path="/" element={<Entry />} />
+            <Route path="/awaiting" element={<AwaitingDriverConfirm />} />
+            <Route path="/trip" element={<InTrip />} />
+            <Route path="/trip-completed" element={<TripCompleted />} />
+            <Route path="/receipt" element={<Receipt />} />
+            <Route path="/ride-rejected" element={<RideRejected />} />
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </Layout>
+      </Router>
+    </RideProvider>
   );
 }
 

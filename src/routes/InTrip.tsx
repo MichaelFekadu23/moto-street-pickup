@@ -1,19 +1,19 @@
 // pages/InTrip.tsx
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 import { motion } from "framer-motion";
 
 import MainContentWrapper from "../components/MianContentWrapper";
 import PrimaryButton from "../components/PrimaryButton";
 import logo from "../assets/logo.svg";
 import Footer from "../components/Footer";
-import { useRider } from "../features/rider/riderContext";
-import { useDriver } from "../features/driver/DriverContext";
+import { useRider } from "../features/ride/rideContext";
+import { useDriver } from "../features/ride/rideContext";
 
 // NEW: WebSocket-first status with polling fallback
 import { useRideStatus } from "../features/rideStatus/useRideStatus";
+import { useRideConfirmation } from "../hooks/useRideConfirmation";
 
-
+// Utility function
 function readLS(k: string) {
   try {
     const v = localStorage.getItem(k);
@@ -24,11 +24,8 @@ function readLS(k: string) {
 }
 
 const InTrip = () => {
-  const navigate = useNavigate();
   const { rider } = useRider();
   const { profile: driver } = useDriver();
-  const [confirming, setConfirming] = useState(false);
-  const [error, setError] = useState<string | null>(null);
 
   const riderName = rider?.name || readLS("moto_name") || "—";
   const plate = driver?.plateNumber || "—";
@@ -37,38 +34,23 @@ const InTrip = () => {
   const rideId = localStorage.getItem("moto_rideId") || "";
   const phoneNumber = (localStorage.getItem("moto_phone") || rider?.phone || "").trim();
 
-  // WebSocket with polling fallback (no old polling hook)
+  // WebSocket with polling fallback
   const { status, wsConnected, wsError, pollError } = useRideStatus({
     rideId,
     phoneNumber,
     pollMs: 3000,
-    usePollingFallback: true,   // fallback if WS is down
-    disableWebSocket: false,    // keep WS enabled
+    usePollingFallback: true,
+    disableWebSocket: false,
   });
 
-  // enable the button only when the server says trip is completed
-  const isTripCompleted = status === "trip_completed";
+  // Ride confirmation logic
+  const { confirmRideEnd, confirming, error } = useRideConfirmation({
+    rideId,
+    successRoute: '/receipt',
+  });
 
-  const handleCompleteRide = async () => {
-    if (!isTripCompleted) return;
-    if (confirming) return; // prevent double clicks
-    setConfirming(true);
-    setError(null);
-    const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/rider/${rideId}/confirm`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ confirmed: true, ride_id: rideId }),
-    });
-    setConfirming(false);
-    if (res.ok) {
-      navigate("/receipt");
-    } else {
-      const err = await res.json().then((data) => data.error?.message || "Failed to confirm trip end");
-      setError(err);
-    }
-  }
+  // Enable the button only when the server says trip is completed
+  const isTripCompleted = status === "trip_completed";
 
   // Optional: debug log (remove if noisy)
   useEffect(() => {
@@ -125,7 +107,7 @@ const InTrip = () => {
       <div className="flex flex-col w-full max-w-sm items-center justify-center gap-3 flex-shrink-0">
         <PrimaryButton
           title={isTripCompleted ? "Confirm End Trip" : "Waiting for Driver to End…"}
-          onclick={handleCompleteRide}
+          onclick={confirmRideEnd}
           loading={confirming}
           disabled={!isTripCompleted}
         />

@@ -1,114 +1,68 @@
-import { useEffect, useMemo, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+// pages/Receipt.tsx
+import { useMemo } from 'react';
 import MainContentWrapper from '../components/MianContentWrapper';
 import logo from '../assets/logo.svg';
 import Footer from '../components/Footer';
 import pay from '../assets/pay.svg';
-import { fetchRideFare, type FareResponse } from '../features/rides/fare';
 import { LoadingDots } from '../components/LoadingDots';
-
-function round(n: number, dp = 1) {
-  const f = Math.pow(10, dp);
-  return Math.round(n * f) / f;
-}
-
-type PaymentResponse = {
-  message: string;
-  method: string;
-  paid: boolean;
-  processed_at: string;
-  ride_id: string;
-  error?: { message: string }
-};
-
-const BASE = import.meta.env.VITE_API_BASE_URL; // must be HTTPS in production
-
-async function processPayment(rideId: string, method: string): Promise<PaymentResponse> {
-  const res = await fetch(`${BASE}/street-ride/payment`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Accept: 'application/json',
-    },
-    body: JSON.stringify({ ride_id: rideId, method }),
-  });
-  if (!res.ok) {
-    const msg = await res.json().then((data) => data.error?.message || 'Unknown error');
-    throw new Error(`Payment failed (${res.status}) ${msg}`);
-  }
-  return res.json();
-}
+import { useFare } from '../hooks/useFare';
+import { usePayment } from '../hooks/usePayment';
 
 const Receipt = () => {
-  const navigate = useNavigate();
-
-  // from your flow; adjust key names if different
+  // Get ride details from localStorage
   const rideId = useMemo(() => localStorage.getItem('moto_rideId') || '', []);
   const paymentMethod = useMemo(
-    () => localStorage.getItem('moto_payment_method') || 'cash', // fallback to 'cash'
+    () => localStorage.getItem('moto_payment_method') || 'cash',
     []
   );
 
-  const [fare, setFare] = useState<FareResponse | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [err, setErr] = useState<string | null>(null);
+  // Fetch fare data
+  const {
+    fare,
+    loading: fareLoading,
+    error: fareError,
+    currency,
+    totalFare,
+    distanceKm,
+    durationMinutes,
+    refetch,
+  } = useFare({
+    rideId,
+    persistToLocalStorage: true,
+  });
 
-  // paying state
-  const [paying, setPaying] = useState(false);
-  const [payErr, setPayErr] = useState<string | null>(null);
+  // Handle payment
+  const {
+    processPayment,
+    paying,
+    error: paymentError,
+  } = usePayment({
+    rideId,
+    paymentMethod,
+    successRoute: '/trip-completed',
+    persistToLocalStorage: true,
+  });
 
-  useEffect(() => {
-    let alive = true;
-    (async () => {
-      if (!rideId) { setErr('Missing ride id'); setLoading(false); return; }
-      try {
-        setLoading(true);
-        const data = await fetchRideFare(rideId);
-        if (!alive) return;
-        setFare(data);
-        setErr(null);
-      } catch (e: any) {
-        if (!alive) return;
-        setErr(e?.message || 'Failed to load fare');
-      } finally {
-        if (alive) setLoading(false);
-      }
-    })();
-    return () => { alive = false; };
-  }, [rideId]);
-
-  const currency = fare?.breakdown?.currency && fare.breakdown.currency.trim() !== '' ? fare.breakdown.currency : 'ETB';
-  const total = fare?.total_fare ?? fare?.breakdown?.total_fare;
-
-  // save to localStorage for trip-complete page
-  useEffect(() => {
-    if (fare) {
-      localStorage.setItem('moto_fare', JSON.stringify(fare));
-    }
-  }, [fare]);
-
-  const onPay = async () => {
-    if (!rideId) return;
-    setPayErr(null);
-    setPaying(true);
-    try {
-      const res = await processPayment(rideId, paymentMethod);
-      if (!res.paid) throw new Error('Payment not marked as paid.');
-      // persist for the next screen if needed
-      localStorage.setItem('moto_payment', JSON.stringify(res));
-      navigate('/trip-completed', { replace: true });
-    } catch (e: any) {
-      setPayErr(e?.message || 'Payment failed');
-    } finally {
-      setPaying(false);
-    }
+  const handlePayment = () => {
+    if (!rideId || fareLoading || fareError || paying) return;
+    processPayment();
   };
+
+  const handleRetryFare = () => {
+    refetch();
+  };
+
+  const isPaymentDisabled = fareLoading || !!fareError || paying || !rideId;
 
   return (
     <MainContentWrapper>
       {/* Header */}
       <div className="flex flex-col gap-4 items-center justify-center w-full mt-8">
-        <img src={logo} alt="Logo" className="w-[120px] h-[27.72px] md:w-[180px] md:h-[41.58px]" />
+        <img 
+          src={logo} 
+          alt="Logo" 
+          className="w-[120px] h-[27.72px] md:w-[180px] md:h-[41.58px]" 
+        />
         <div className="text-white text-center">
           <p className="font-semibold text-[24px] uppercase">TRIP</p>
           <p className="font-semibold text-[24px] uppercase">COMPLETED</p>
@@ -117,54 +71,66 @@ const Receipt = () => {
 
       {/* Fare card */}
       <div className="border border-white/50 p-4 rounded-md w-full max-w-sm mx-auto">
-        {loading ? (
+        {fareLoading ? (
           <div className="animate-pulse space-y-6">
             <div className="h-4 bg-white/20 rounded w-3/4" />
             <div className="h-4 bg-white/20 rounded w-2/3" />
             <div className="h-4 bg-white/20 rounded w-1/2" />
           </div>
-        ) : err ? (
-          <div className="text-red-400 text-center text-sm">{err}</div>
-        ) : (
+        ) : fareError ? (
+          <div className="text-center space-y-3">
+            <div className="text-red-400 text-sm">{fareError}</div>
+            <button
+              onClick={handleRetryFare}
+              className="text-white/70 hover:text-white text-sm underline"
+            >
+              Retry loading fare
+            </button>
+          </div>
+        ) : fare ? (
           <>
             <div className="flex justify-between mb-3">
               <span className="text-white/90 font-normal text-[16px]">Distance :</span>
-              <span className="text-white">{round(fare!.distance_km, 1)} km</span>
+              <span className="text-white">{distanceKm} km</span>
             </div>
             <div className="flex justify-between mb-3">
               <span className="text-white/90 font-normal text-[16px]">Time :</span>
-              <span className="text-white">{Math.round(fare!.duration_minutes)} mins</span>
+              <span className="text-white">{durationMinutes} mins</span>
             </div>
             <div className="flex justify-between">
               <span className="text-white/90 font-normal text-[16px]">Total :</span>
               <span className="text-white/90 font-normal">
-                {currency} {total}
+                {currency} {totalFare}
               </span>
             </div>
           </>
-        )}
+        ) : null}
       </div>
 
       {/* Pay CTA + footer */}
       <div className="flex flex-col w-full max-w-sm items-center justify-center gap-3 flex-shrink-0">
         <button
-          onClick={onPay}
-          className="relative w-full bg-black py-3 px-4 rounded-lg font-semibold text-white hover:bg-gray-800 transition-colors flex items-center justify-center gap-3 disabled:opacity-50"
-          // disabled={loading || !!err || paying || !rideId}
-          aria-disabled={loading || !!err || paying || !rideId}
-          title={!rideId ? 'Missing ride id' : undefined}
+          onClick={handlePayment}
+          className="relative w-full bg-black py-3 px-4 rounded-lg font-semibold text-white hover:bg-gray-800 transition-colors flex items-center justify-center gap-3 disabled:opacity-50 disabled:hover:bg-gray-800"
+          disabled={isPaymentDisabled}
+          aria-disabled={isPaymentDisabled}
+          title={!rideId ? 'Missing ride ID' : fareError ? 'Cannot process payment due to fare loading error' : undefined}
         >
-          {paying ? <LoadingDots /> : (
+          {paying ? (
+            <LoadingDots />
+          ) : (
             <>
               <img src={pay} className="h-5 w-5" alt="Pay Icon" />
               <span className="text-center font-semibold text-[14px]">
-                {loading ? 'Loading fare…' : `Pay Now`}
+                {fareLoading ? 'Loading fare…' : 'Pay Now'}
               </span>
             </>
           )}
         </button>
 
-        {payErr && <div className="text-red-600 text-center text-sm">{payErr}</div>}
+        {paymentError && (
+          <div className="text-red-600 text-center text-sm">{paymentError}</div>
+        )}
 
         <Footer text="Powered by Moto street pickup" />
       </div>

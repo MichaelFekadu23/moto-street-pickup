@@ -11,10 +11,10 @@ import Footer from '../components/Footer';
 import logo from '../assets/logo.svg';
 
 import { useQrValidation } from '../features/qr/useQrValidation';
-import { useDriver } from '../features/driver/DriverContext';
-import { initiateStreetRide } from '../features/rides/initiate';
+import { useDriver } from '../features/ride/rideContext';
+import { initiateStreetRide } from '../features/ride/initiate';
 import { isApiError } from '../features/common/apiError';
-import { useRider } from '../features/rider/riderContext';
+import { useRider } from '../features/ride/rideContext';
 
 type FormValues = { name: string; phone: string };
 
@@ -153,50 +153,50 @@ const Entry = () => {
               noValidate
             >
               <InputField<FormValues>
-                id="name"
-                name='name'
-                type="text"
-                label="Name"
-                register={register}
-                rules={{
-                  required: 'Name is required',
-                  minLength: { value: 2, message: 'At least 2 characters' },
-                }}
-                error={errors.name}
+              id="name"
+              name='name'
+              type="text"
+              label="Name"
+              register={register}
+              rules={{
+                required: 'Name is required',
+                minLength: { value: 2, message: 'At least 2 characters' },
+              }}
+              error={errors.name}
               />
 
               <InputField<FormValues>
-                id="phone"
-                name='phone'
-                type="tel"
-                inputMode="tel"
-                label="Phone"
-                register={register}
-                rules={{
-                  required: 'Phone number is required',
-                  pattern: {
-                    value: /^\+?\d{9,15}$/,
-                    message: 'Enter a valid phone number',
-                  },
-                }}
-                error={errors.phone}
+              id="phone"
+              name='phone'
+              type="tel"
+              inputMode="tel"
+              label="Phone"
+              register={register}
+              rules={{
+                required: 'Phone number is required',
+                pattern: {
+                value: /^(09\d{8}|(?:\+251|251)\d{9})$/,
+                message: 'Enter a valid phone number',
+                },
+              }}
+              error={errors.phone}
               />
 
               {/* Optional root-level error display (doesn't change layout) */}
               {errors.root?.message && (
-                console.log(errors.root),
-                <div className="text-red-400 text-sm font-medium -mt-2">{String(errors.root.message).includes('500') ? 'Internal server error' : String(errors.root.message)}</div>
+              console.log(errors.root),
+              <div className="text-red-400 text-sm font-medium -mt-2">{String(errors.root.message).includes('500') ? 'Internal server error' : String(errors.root.message)}</div>
               )}
 
               <div className="flex flex-col w-full items-center justify-center gap-3 flex-shrink-0">
-                <PrimaryButton
-                  title="Start Ride"
-                  type="submit"
-                  onclick={() => {}}
-                  disabled={!isValid}
-                  loading={isSubmitting}
-                />
-                <Footer text="Powered by Moto street pickup" />
+              <PrimaryButton
+                title="Start Ride"
+                type="submit"
+                onclick={() => {}}
+                disabled={!isValid}
+                loading={isSubmitting}
+              />
+              <Footer text="Powered by Moto street pickup" />
               </div>
             </form>
           )}

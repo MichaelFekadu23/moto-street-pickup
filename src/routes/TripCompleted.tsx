@@ -8,6 +8,7 @@ import { LoadingDots } from '../components/LoadingDots';
 import { useFareData } from '../hooks/useFareData';
 import { useReceipt } from '../hooks/useReceipt';
 import { useReceiptShare } from '../hooks/useReceiptShare';
+import { useRide } from '../features/ride/rideContext';
 
 // Helper function to convert share method to user-friendly text
 const getShareMethodText = (method: string): string => {
@@ -25,9 +26,10 @@ const getShareMethodText = (method: string): string => {
 
 const TripCompleted = () => {
   // Get rideId from localStorage
+  const { ride } = useRide();
   const rideId = useMemo(() => {
-    return localStorage.getItem('moto_rideId') || '';
-  }, []);
+    return localStorage.getItem('moto_rideId') || ride?.rideId || '';
+  }, [ride]);
 
   // Get fallback data from localStorage (for immediate display)
   const fallbackData = useFareData();
@@ -218,12 +220,12 @@ const TripCompleted = () => {
                   className="h-5 w-5" 
                   alt="Share Icon"
                 />
-                <span className="text-center font-semibold text-[14px]">
+                <span className="text-center text-black font-semibold text-[14px]">
                   Share Receipt
                 </span>
               </>
             ) : (
-              <span className="text-center font-semibold text-[14px]">
+              <span className="text-center text-black font-semibold text-[14px]">
                 No Receipt Available
               </span>
             )}

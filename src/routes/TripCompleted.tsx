@@ -231,7 +231,7 @@ const TripCompleted = () => {
 
           {/* Show share error if any */}
           {shareError && (
-            <div className="text-red-400 text-center text-sm">
+            <div className="text-red-600 text-center text-sm">
               {shareError}
             </div>
           )}

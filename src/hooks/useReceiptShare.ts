@@ -48,10 +48,13 @@ export function useReceiptShare({
 
       // Then use the utility function to share it
       const shareResult = await shareReceiptUtil(response.data);
-      const method = shareResult.method;
+      const method = shareResult?.method;
       
-      onSuccess?.(method);
-      return { ok: true, method };
+      if (method) {
+        onSuccess?.(method);
+        return { ok: true, method };
+      }
+      return { ok: false, error: 'Receipt sharing was not completed.' };
 
     } catch (err) {
       const errorMsg = err instanceof Error ? err.message : 'Failed to share receipt';

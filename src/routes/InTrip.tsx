@@ -59,7 +59,7 @@ const InTrip = () => {
   }, [status, wsConnected, wsError, pollError]);
 
   return (
-    <MainContentWrapper gap="1.8rem">
+    <MainContentWrapper gap="2rem">
       {/* Logo + Heading */}
       <motion.div
         className="flex flex-col gap-4 items-center justify-center w-full mt-5"

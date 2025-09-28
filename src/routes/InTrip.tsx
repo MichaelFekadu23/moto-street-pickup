@@ -59,10 +59,10 @@ const InTrip = () => {
   }, [status, wsConnected, wsError, pollError]);
 
   return (
-    <MainContentWrapper>
+    <MainContentWrapper gap="1.8rem">
       {/* Logo + Heading */}
       <motion.div
-        className="flex flex-col gap-4 items-center justify-center w-full mt-10"
+        className="flex flex-col gap-4 items-center justify-center w-full mt-5"
         aria-live="polite"
         animate={{ scale: [1, 1.02, 1], opacity: [1, 0.95, 1] }}
         transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}

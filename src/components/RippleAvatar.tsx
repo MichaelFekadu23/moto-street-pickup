@@ -30,8 +30,8 @@ export default function RippleAvatar({ photoUrl = Profile }: RippleProps) {
   return (
     <div className="relative h-36 w-36 flex items-center justify-center overflow-visible">
       {/* Static shadow rings (subtle) */}
-      <span className="absolute h-[90%] w-[90%] rounded-full border bg-white/10 border-white/10"></span>
-      <span className="absolute h-[120%] w-[120%] rounded-full border bg-white/10 border-white/10"></span>
+      <span className="absolute h-[85%] w-[85%] rounded-full border bg-white/10 border-white/10"></span>
+      <span className="absolute h-[115%] w-[115%] rounded-full border bg-white/10 border-white/10"></span>
 
       {/* Animated ripples (staggered) */}
       {!prefersReduced && (

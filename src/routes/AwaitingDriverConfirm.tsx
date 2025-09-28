@@ -40,8 +40,8 @@ const AwaitingDriverConfirm = () => {
   }, [status, navigate]);
 
   return (
-    <MainContentWrapper>
-      <div className="flex items-center justify-center w-full mt-8">
+    <MainContentWrapper gap="2rem">
+      <div className="flex items-center justify-center w-full mt-5">
         <LogoAndDriverInfo
           className="flex flex-col items-center justify-center"
           driverName={profile?.driverName || "—"}

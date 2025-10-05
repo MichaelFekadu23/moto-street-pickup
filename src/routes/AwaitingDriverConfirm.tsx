@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { useDriver } from "../features/ride/rideContext";
 import { useRide } from "../features/ride/rideContext";
 import { useRideStatus } from "../features/rideStatus/useRideStatus";
+import { t } from "i18next";
 
 const AwaitingDriverConfirm = () => {
   const navigate = useNavigate();
@@ -55,8 +56,9 @@ const AwaitingDriverConfirm = () => {
 
       <div className="flex flex-col gap-4">
         <div className="text-white text-center">
-          <p className="font-semibold text-[20px] uppercase">AWAITING DRIVER</p>
-          <p className="font-semibold text-[20px] uppercase">CONFIRMATION!</p>
+            <p className="font-semibold text-[20px] uppercase whitespace-pre-line">
+              {t("AWAITING DRIVER\nCONFIRMATION!")}
+            </p>
 
           {/* {process.env.NODE_ENV === "development" && (
             <div className="text-xs opacity-60 mt-2 space-y-1">

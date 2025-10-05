@@ -160,7 +160,7 @@ const Entry = () => {
               register={register}
               rules={{
                 required: 'Name is required',
-                minLength: { value: 2, message: 'At least 2 characters' },
+                minLength: { value: 2, message: 'At least 2 characters required' },
               }}
               error={errors.name}
               />

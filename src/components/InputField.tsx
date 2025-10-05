@@ -1,4 +1,5 @@
 // components/InputField.tsx
+import { t } from "i18next";
 import { type InputHTMLAttributes } from "react";
 import type { UseFormRegister, FieldError, Path, FieldValues } from "react-hook-form";
 
@@ -31,7 +32,7 @@ export default function InputField<TFormValues extends FieldValues>({
         }`}
       >
         <legend className="ml-3 px-1.5 text-white text-sm leading-none">
-          {label}
+          {label == 'Name' ? t('Name') : t('Phone')}
         </legend>
 
         <input
@@ -44,7 +45,7 @@ export default function InputField<TFormValues extends FieldValues>({
       </fieldset>
 
       {error && (
-        <p className="text-sm text-red-500">{error.message}</p>
+        <p className="text-sm text-red-500">{t(error.message || '')}</p>
       )}
     </div>
   );

@@ -8,6 +8,7 @@ import TripCompleted from './routes/TripCompleted';
 import Receipt from './routes/Receipt';
 import { RideRejected } from './routes/RideRejected';
 import { RideProvider } from './features/ride/rideContext'; // Import the new unified context
+import './i18n'; // Import i18n configuration
 
 function App() {
   return (

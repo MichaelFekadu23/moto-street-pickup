@@ -22,17 +22,21 @@ export type RideData = {
   status?: 'pending' | 'active' | 'completed' | 'cancelled';
 };
 
+export type Language = 'en' | 'am';
+
 type RideState = {
   ride: RideData | null;
   rideId: string | null;
   rider: RiderInfo | null;
   driver: DriverProfile | null;
   token: string | null;
+  language: Language;
   setRide: (ride: RideData | null) => void;
   setRideId: (rideId: string | null) => void;
   setRider: (rider: RiderInfo | null) => void;
   setDriver: (driver: DriverProfile | null) => void;
   setToken: (token: string | null) => void;
+  setLanguage: (language: Language) => void;
   createRide: (rideId: string, rider: RiderInfo, driver: DriverProfile) => void;
   clear: () => void;
   clearRide: () => void;
@@ -41,6 +45,7 @@ type RideState = {
 const RideContext = createContext<RideState | undefined>(undefined);
 
 const STORAGE_KEY = 'moto_ride_data';
+const LANGUAGE_KEY = 'moto_language';
 const STORAGE_TTL_MS = 6 * 60 * 60 * 1000; // 6 hours
 
 type Persisted = {
@@ -67,6 +72,17 @@ function loadFromStorage(): Persisted | null {
   }
 }
 
+function loadLanguage(): Language {
+  try {
+    const saved = localStorage.getItem(LANGUAGE_KEY);
+    if (saved === 'en' || saved === 'am') return saved;
+    // Default to English for Ethiopian users
+    return 'en';
+  } catch {
+    return 'en';
+  }
+}
+
 function saveToStorage(ride: RideData | null, rider: RiderInfo | null, driver: DriverProfile | null, token: string | null) {
   try {
     const payload: Persisted = { ride, rider, driver, token, ts: Date.now() };
@@ -74,13 +90,21 @@ function saveToStorage(ride: RideData | null, rider: RiderInfo | null, driver: D
   } catch {}
 }
 
+function saveLanguage(language: Language) {
+  try {
+    localStorage.setItem(LANGUAGE_KEY, language);
+  } catch {}
+}
+
 export function RideProvider({ children }: { children: React.ReactNode }) {
   const persisted = useMemo(() => loadFromStorage(), []);
+  const initialLanguage = useMemo(() => loadLanguage(), []);
   
   const [ride, setRideState] = useState<RideData | null>(persisted?.ride ?? null);
   const [rider, setRiderState] = useState<RiderInfo | null>(persisted?.rider ?? null);
   const [driver, setDriverState] = useState<DriverProfile | null>(persisted?.driver ?? null);
   const [token, setTokenState] = useState<string | null>(persisted?.token ?? null);
+  const [language, setLanguageState] = useState<Language>(initialLanguage);
 
   // Derived state
   const rideId = ride?.rideId ?? null;
@@ -88,6 +112,10 @@ export function RideProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     saveToStorage(ride, rider, driver, token);
   }, [ride, rider, driver, token]);
+
+  useEffect(() => {
+    saveLanguage(language);
+  }, [language]);
 
   const setRide = useCallback((r: RideData | null) => {
     setRideState(r);
@@ -133,6 +161,10 @@ export function RideProvider({ children }: { children: React.ReactNode }) {
 
   const setToken = useCallback((t: string | null) => setTokenState(t), []);
 
+  const setLanguage = useCallback((lang: Language) => {
+    setLanguageState(lang);
+  }, []);
+
   const createRide = useCallback((rideId: string, riderInfo: RiderInfo, driverProfile: DriverProfile) => {
     const newRide: RideData = {
       rideId,
@@ -151,6 +183,7 @@ export function RideProvider({ children }: { children: React.ReactNode }) {
     setRiderState(null);
     setDriverState(null);
     setTokenState(null);
+    // Note: language preference is preserved even after clearing ride data
   }, []);
 
   const clearRide = useCallback(() => {
@@ -163,11 +196,13 @@ export function RideProvider({ children }: { children: React.ReactNode }) {
     rider,
     driver,
     token,
+    language,
     setRide,
     setRideId,
     setRider,
     setDriver,
     setToken,
+    setLanguage,
     createRide,
     clear,
     clearRide
@@ -200,5 +235,14 @@ export function useRider() {
     rider,
     setRider,
     clear
+  };
+}
+
+// New convenience hook for language
+export function useLanguage() {
+  const { language, setLanguage } = useRide();
+  return {
+    language,
+    setLanguage
   };
 }

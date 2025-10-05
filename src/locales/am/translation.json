@@ -1,0 +1,13 @@
+{
+  "rideWithDriver": "ከሹፌር {{driverName}} ጋር እየተጓዙ ነው",
+  "-Plate": " -የመኪና ሰሌዳ",
+  "Name": "ስም",
+  "Phone": "ስልክ",
+  "Start Ride": "ጉዞ ጀምር",
+  "Powered by Moto street pickup": "በሞቶ ስትሪት ፒክአፕ የተዘጋጀ",
+  "Name is required": "ስም ያስፈልጋል",
+  "At least 2 characters required": "ቢያንስ 2 ፊደሎች ያስፈልጋሉ",
+  "Phone number is required": "ስልክ ያስፈልጋል",
+  "Enter a valid phone number": "ትክክለኛ የስልክ ቁጥር ያስገቡ",
+  "AWAITING DRIVER\nCONFIRMATION!": "የአሽከርካሪ ማረጋገጫን \nበመጠባበቅ ላይ!"
+}

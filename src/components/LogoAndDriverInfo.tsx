@@ -1,5 +1,7 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import logo from '../assets/logo.svg';
+import { useTranslation } from 'react-i18next';
+import { useRide } from '../features/ride/rideContext';
 
 interface LogoAndDriverInfoProps {
   showDriverInfo?: boolean; // Optional prop to show/hide driver info
@@ -9,6 +11,13 @@ interface LogoAndDriverInfoProps {
 }
 
 const LogoAndDriverInfo: React.FC<LogoAndDriverInfoProps> = ({ driverName, plateNumber, className, showDriverInfo = true}) => {
+  const { t } = useTranslation();
+  const { language } = useRide();
+
+  useEffect(() => {
+    document.title = language === 'am' ? 'ሞቶ ስትሪት ፒክአፕ' : 'Moto Street Pickup';
+  }, [language]);
+
   return (
     <div className={`flex flex-col items-center ${className || ''}`}>
       <img 
@@ -18,8 +27,8 @@ const LogoAndDriverInfo: React.FC<LogoAndDriverInfoProps> = ({ driverName, plate
       />
       {showDriverInfo && (
       <div className="text-white text-center mt-4">
-        <p className="text-lg font-normal">You're riding with {driverName}</p>
-        <p className="text-gray-300">-Plate: {plateNumber}</p>
+        <p className="text-lg font-normal">{t('rideWithDriver', { driverName: driverName.split(' ')[1] })}</p>
+        <p className="text-gray-300">{t('-Plate')}: {plateNumber}</p>
       </div>
       )}
     </div>

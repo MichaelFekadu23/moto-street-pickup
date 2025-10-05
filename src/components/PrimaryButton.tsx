@@ -1,5 +1,6 @@
 import React, { type ReactNode } from "react";
 import { LoadingDots } from "./LoadingDots";
+import { t } from "i18next";
 
 interface PrimaryButtonProps {
   title: string;
@@ -28,7 +29,7 @@ const PrimaryButton: React.FC<PrimaryButtonProps> = ({
       {loading ? (
         loadingContent ?? <LoadingDots />
       ) : (
-        <span className="text-center font-semibold text-[14px]">{title}</span>
+        <span className="text-center font-semibold text-[14px]">{title == 'Start Ride' ? t('Start Ride') : title}</span>
       )}
 
       {!loading && (

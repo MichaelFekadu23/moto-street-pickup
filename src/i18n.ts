@@ -11,7 +11,7 @@ i18n
       en: { translation: enTranslation },
       am: { translation: amTranslation }
     },
-    lng: 'am', // default to Amharic for Ethiopian users
+    lng: localStorage.getItem('moto_language') || 'en', // default to English
     fallbackLng: 'en',
     interpolation: {
       escapeValue: false

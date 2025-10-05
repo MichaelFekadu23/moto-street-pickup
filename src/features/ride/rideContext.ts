@@ -76,7 +76,7 @@ function loadLanguage(): Language {
   try {
     const saved = localStorage.getItem(LANGUAGE_KEY);
     if (saved === 'en' || saved === 'am') return saved;
-    // Default to English for Ethiopian users
+    // Default to English
     return 'en';
   } catch {
     return 'en';

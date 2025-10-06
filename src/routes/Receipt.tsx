@@ -7,6 +7,8 @@ import pay from '../assets/pay.svg';
 import { LoadingDots } from '../components/LoadingDots';
 import { useFare } from '../hooks/useFare';
 import { usePayment } from '../hooks/usePayment';
+import { t } from 'i18next';
+import { useRide } from '../features/ride/rideContext';
 
 const Receipt = () => {
   // Get ride details from localStorage
@@ -15,6 +17,8 @@ const Receipt = () => {
     () => localStorage.getItem('moto_payment_method') || 'cash',
     []
   );
+  const { language } = useRide();
+  const currentLanguage = language || localStorage.getItem('moto_language') || 'en';
 
   // Fetch fare data
   const {
@@ -64,8 +68,8 @@ const Receipt = () => {
           className="w-[120px] h-[27.72px] md:w-[180px] md:h-[41.58px]" 
         />
         <div className="text-white text-center">
-          <p className="font-semibold text-[24px] uppercase">TRIP</p>
-          <p className="font-semibold text-[24px] uppercase">COMPLETED</p>
+          <p className="font-semibold text-[24px] uppercase">{t("TRIP")}</p>
+          <p className="font-semibold text-[24px] uppercase">{t("COMPLETED")}</p>
         </div>
       </div>
 
@@ -90,17 +94,17 @@ const Receipt = () => {
         ) : fare ? (
           <>
             <div className="flex justify-between mb-3">
-              <span className="text-white/90 font-normal text-[16px]">Distance :</span>
-              <span className="text-white">{distanceKm} km</span>
+              <span className="text-white/90 font-normal text-[16px]">{t("Distance")} :</span>
+              <span className="text-white">{distanceKm} {t("km")}</span>
             </div>
             <div className="flex justify-between mb-3">
-              <span className="text-white/90 font-normal text-[16px]">Time :</span>
-              <span className="text-white">{durationMinutes} mins</span>
+              <span className="text-white/90 font-normal text-[16px]">{t("Time")} :</span>
+              <span className="text-white">{durationMinutes} {t("mins")}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-white/90 font-normal text-[16px]">Total :</span>
+              <span className="text-white/90 font-normal text-[16px]">{t("Total")} :</span>
               <span className="text-white/90 font-normal">
-                {currency} {totalFare}
+                {currentLanguage === 'am' ? `${totalFare} ${t(currency)}` : `${t(currency)} ${totalFare}`}
               </span>
             </div>
           </>
@@ -122,7 +126,7 @@ const Receipt = () => {
             <>
               <img src={pay} className="h-5 w-5" alt="Pay Icon" />
               <span className="text-center font-semibold text-[14px]">
-                {fareLoading ? 'Loading fare…' : 'Pay Now'}
+                {fareLoading ? t("Loading Fare...") : t("Pay Now")}
               </span>
             </>
           )}

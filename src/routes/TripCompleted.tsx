@@ -9,6 +9,7 @@ import { useFareData } from '../hooks/useFareData';
 import { useReceipt } from '../hooks/useReceipt';
 import { useReceiptShare } from '../hooks/useReceiptShare';
 import { useRide } from '../features/ride/rideContext';
+import { t } from 'i18next';
 
 // Helper function to convert share method to user-friendly text
 const getShareMethodText = (method: string): string => {
@@ -30,6 +31,8 @@ const TripCompleted = () => {
   const rideId = useMemo(() => {
     return localStorage.getItem('moto_rideId') || ride?.rideId || '';
   }, [ride]);
+  const { language } = useRide();
+  const currentLanguage = language || localStorage.getItem('moto_language') || 'en';
 
   // Get fallback data from localStorage (for immediate display)
   const fallbackData = useFareData();
@@ -160,13 +163,18 @@ const TripCompleted = () => {
               ) : displayData.hasData ? (
                 <>
                   <p className="text-lg sm:text-xl">
-                    Your Trip: {displayData.distanceKm} Km | {displayData.durationMinutes} Mins
+                    {t("Your Trip")}: {displayData.distanceKm} {t("km")} | {displayData.durationMinutes} {t("mins")}
                   </p>
                   <p className="text-[#01C705] font-semibold">
-                    {displayData.currency} {displayData.totalFare}
+                    {currentLanguage === 'am' 
+                      ? `${displayData.totalFare} ${t(displayData.currency)}` 
+                      : `${t(displayData.currency)} ${displayData.totalFare}`}
                   </p>
                   <p className="text-lg sm:text-xl">
-                    Paid Via {displayData.paymentMethod}
+                    {currentLanguage === 'am' 
+                      ? `${t(displayData.paymentMethod)} ${t("Paid Via")}` 
+                      : `${t("Paid Via")} ${t(displayData.paymentMethod)}`
+                    }
                   </p>
                   {/* Show data source in development */}
                   {process.env.NODE_ENV === 'development' && (
@@ -178,11 +186,11 @@ const TripCompleted = () => {
               ) : (
                 <>
                   <p className="text-lg sm:text-xl text-white/60">
-                    Trip completed successfully
+                    {t("Trip completed successfully")}
                   </p>
                   {receiptError && (
                     <p className="text-sm text-red-400 mt-2">
-                      Unable to load trip details
+                      {t("Unable to load trip details")}
                     </p>
                   )}
                 </>
@@ -199,7 +207,7 @@ const TripCompleted = () => {
             className="h-20 w-20 mb-4" 
           />
           <p className="font-semibold text-[20px] uppercase text-white">
-            THANK YOU
+            {t("THANK YOU")}
           </p>
         </div>
 
@@ -221,12 +229,12 @@ const TripCompleted = () => {
                   alt="Share Icon"
                 />
                 <span className="text-center text-black font-semibold text-[14px]">
-                  Share Receipt
+                  {t("Share Receipt")}
                 </span>
               </>
             ) : (
               <span className="text-center text-black font-semibold text-[14px]">
-                No Receipt Available
+                {t("No Receipt Available")}
               </span>
             )}
           </button>

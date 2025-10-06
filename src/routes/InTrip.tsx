@@ -12,6 +12,7 @@ import { useDriver } from "../features/ride/rideContext";
 // NEW: WebSocket-first status with polling fallback
 import { useRideStatus } from "../features/rideStatus/useRideStatus";
 import { useRideConfirmation } from "../hooks/useRideConfirmation";
+import { t } from "i18next";
 
 // Utility function
 function readLS(k: string) {
@@ -78,7 +79,7 @@ const InTrip = () => {
           animate={{ backgroundPosition: ["0% 50%", "200% 50%"] }}
           transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
         >
-          Ride in <br />progress
+            <span dangerouslySetInnerHTML={{ __html: t("Ride in<br />progress") }} />
         </motion.p>
 
         {/* Micro progress underline */}
@@ -94,11 +95,11 @@ const InTrip = () => {
       {/* Trip summary */}
       <div className="border border-white/50 p-4 rounded-md w-full max-w-sm mx-auto">
         <div className="flex justify-between mb-4">
-          <span className="text-white font-normal text-[16px]">Rider Name :</span>
+          <span className="text-white font-normal text-[16px]">{t("Rider Name")} :</span>
           <span className="text-white">{riderName}</span>
         </div>
         <div className="flex justify-between">
-          <span className="text-white font-normal text-[16px]">Number Plate :</span>
+          <span className="text-white font-normal text-[16px]">{t("Number Plate")} :</span>
           <span className="text-white">{plate}</span>
         </div>
       </div>
@@ -106,7 +107,7 @@ const InTrip = () => {
       {/* Actions */}
       <div className="flex flex-col w-full max-w-sm items-center justify-center gap-3 flex-shrink-0">
         <PrimaryButton
-          title={isTripCompleted ? "Confirm End Trip" : "Waiting for Driver to End…"}
+          title={isTripCompleted ? t("Confirm End Trip") : t("Waiting for Driver to End…")}
           onclick={confirmRideEnd}
           loading={confirming}
           disabled={!isTripCompleted}

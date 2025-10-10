@@ -15,6 +15,7 @@ import { useDriver } from '../features/ride/rideContext';
 import { initiateStreetRide } from '../features/ride/initiate';
 import { isApiError } from '../features/common/apiError';
 import { useRider } from '../features/ride/rideContext';
+import { t } from 'i18next';
 
 type FormValues = { name: string; phone: string };
 
@@ -115,7 +116,7 @@ const Entry = () => {
             <div className="flex justify-center items-center">
               <div className="h-6 w-6 animate-spin rounded-full border-2 border-white border-t-transparent"></div>
             </div>
-            <div className="mt-4 font-semibold text-[14px] md:text-lg uppercase">Validating QR code...</div>
+            <div className="mt-4 font-semibold text-[14px] md:text-lg uppercase">{t("Validating QR code...")}</div>
           </div>
         </div>
       ) : (
@@ -141,7 +142,7 @@ const Entry = () => {
                     : 'text-gray-300'
                 }`}
             >
-              {qrError.message}
+              {t(qrError.message)}
             </div>
           )}
 

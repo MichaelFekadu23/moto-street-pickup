@@ -21,6 +21,7 @@ export type QRValidateWrappedAPI = {
 export type DriverProfile = {
   driverId: string;
   driverName: string;
+  driverNameAm?: string;
   vehicleModel: string;
   plateNumber: string;
   photoUrl: string;
@@ -28,6 +29,7 @@ export type DriverProfile = {
 };
 
 export type QRNormalized = {
+  ok?: boolean;
   valid: boolean;
   message: string;
   driverProfile?: DriverProfile;

@@ -1,17 +1,19 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { requestJSON } from '../../lib/api';
 import type { QRValidateWrappedAPI, QRError } from './types';
 import { normalizeQR, mapInvalidMessageToError } from './normalize';
 
-import { useDriver } from '../ride/rideContext';
+import { useDriver, useRide } from '../ride/rideContext';
 
 export function useQrValidation(token: string) {
-  const [driverName, setDriverName] = useState('—');
-  const [plateNumber, setPlateNumber] = useState('—');
   const [validating, setValidating] = useState(false);
   const [qrError, setQrError] = useState<QRError | null>(null);
-  const { setProfile: setGlobalProfile, setToken: setGlobalToken } = useDriver();
 
+  // get/set global profile so it can be reused across screens
+  const { profile: globalProfile, setProfile: setGlobalProfile, setToken: setGlobalToken } = useDriver();
+  const { language } = useRide();
+
+  // 1) Fetch ONLY when token changes (not on language changes)
   useEffect(() => {
     let cancelled = false;
 
@@ -25,24 +27,19 @@ export function useQrValidation(token: string) {
         setValidating(true);
         setQrError(null);
 
-        const raw = await requestJSON<QRValidateWrappedAPI>('/street/validate-qr', {
-          method: 'POST',
-          body: { qr_token: token },
-        });
+        const raw = await requestJSON<QRValidateWrappedAPI>(`/qr/validate/${token}`, { method: 'GET' });
         if (cancelled) return;
 
         const r = normalizeQR(raw);
-
+        console.log('QR validation result:', r);
         if (!r.valid) {
           setQrError(mapInvalidMessageToError(r.message));
           return;
         }
-
         if (!r.driverProfile) {
           setQrError({ code: 'MISSING_PROFILE', message: 'Driver profile is missing.' });
           return;
         }
-
         if (r.driverProfile.streetModeActive === false) {
           setQrError({
             code: 'DRIVER_UNAVAILABLE',
@@ -51,13 +48,12 @@ export function useQrValidation(token: string) {
           return;
         }
 
-        setDriverName(r.driverProfile.driverName || '—');
-        setPlateNumber(r.driverProfile.plateNumber || '—');
-
-        setGlobalToken(token); // pass token from hook caller if you want it stored
+        // cache globally; no language-specific fields here
+        setGlobalToken(token);
         setGlobalProfile({
           driverId: r.driverProfile.driverId,
           driverName: r.driverProfile.driverName,
+          driverNameAm: r.driverProfile.driverNameAm, // ok if undefined
           vehicleModel: r.driverProfile.vehicleModel,
           plateNumber: r.driverProfile.plateNumber,
           photoUrl: r.driverProfile.photoUrl,
@@ -77,7 +73,16 @@ export function useQrValidation(token: string) {
     return () => {
       cancelled = true;
     };
-  }, [token]);
+  }, [token]); // <-- language removed
+
+  // 2) Derive UI strings from cached profile; re-run on language or profile change
+  const driverName = useMemo(() => {
+    if (!globalProfile) return '—';
+    if (language === 'en') return globalProfile.driverName || '—';
+    return globalProfile.driverNameAm || globalProfile.driverName || '—';
+  }, [language, globalProfile]);
+
+  const plateNumber = useMemo(() => globalProfile?.plateNumber || '—', [globalProfile]);
 
   return { driverName, plateNumber, validating, qrError };
 }

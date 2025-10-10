@@ -1,24 +1,30 @@
 import type { DriverProfile, QRNormalized, QRValidateWrappedAPI } from './types';
 
 export function normalizeQR(raw: QRValidateWrappedAPI): QRNormalized {
-  const { valid, message, driver_profile } =
-    raw?.data ?? { valid: false as boolean, message: '' as string };
+  // Support new (root-level) response and old (wrapped in `data`) response
+  const payload: any = (raw as any)?.data ?? (raw as any);
 
-  const driverProfile: DriverProfile | undefined = driver_profile
+  const valid = !!payload?.valid;
+  const message: string = payload?.message ?? '';
+
+  const dp = payload?.driver_profile;
+  const driverProfile: DriverProfile | undefined = dp
     ? {
-        driverId: driver_profile.driver_id,
-        driverName: driver_profile.driver_name,
-        vehicleModel: driver_profile.vehicle_model,
-        plateNumber: driver_profile.plate_number,
-        photoUrl: driver_profile.photo_url,
-        streetModeActive: !!driver_profile.street_mode_active,
+        driverId: dp.driver_id,
+        driverName: dp.driver_name,
+        // If you later add this to DriverProfile, map it here:
+        driverNameAm: dp.driver_name_am,
+        vehicleModel: dp.vehicle_model,
+        plateNumber: dp.plate_number,
+        photoUrl: dp.photo_url,
+        streetModeActive: !!dp.street_mode_active,
       }
     : undefined;
 
-  return { valid: !!valid, message: message ?? '', driverProfile };
+  return { valid, message, driverProfile };
 }
 
-// Map backend invalid states to UI error codes
+// Map backend invalid states to UI error codes (kept as-is; extend if backend adds new messages)
 export function mapInvalidMessageToError(message: string) {
   const msg = (message || '').toLowerCase();
   if (msg.includes('qr code not found')) {

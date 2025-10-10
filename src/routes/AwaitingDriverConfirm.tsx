@@ -12,7 +12,7 @@ import { t } from "i18next";
 const AwaitingDriverConfirm = () => {
   const navigate = useNavigate();
   const { profile } = useDriver();
-  const { rider, ride } = useRide();
+  const { rider, ride, language } = useRide();
 
   const rideId = localStorage.getItem("moto_rideId") || ride?.rideId || "";
   const phoneNumber = (localStorage.getItem("moto_phone") || rider?.phone || "").trim();
@@ -45,7 +45,7 @@ const AwaitingDriverConfirm = () => {
       <div className="flex items-center justify-center w-full mt-5">
         <LogoAndDriverInfo
           className="flex flex-col items-center justify-center"
-          driverName={profile?.driverName || "—"}
+          driverName={language === 'en' ? profile?.driverName || "—" : profile?.driverNameAm || "—"}
           plateNumber={profile?.plateNumber || "—"}
         />
       </div>

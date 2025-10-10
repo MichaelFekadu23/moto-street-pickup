@@ -27,7 +27,7 @@ const LogoAndDriverInfo: React.FC<LogoAndDriverInfoProps> = ({ driverName, plate
       />
       {showDriverInfo && (
       <div className="text-white text-center mt-4">
-        <p className="text-lg font-normal">{t('rideWithDriver', { driverName: driverName.split(' ')[1] })}</p>
+        <p className="text-lg font-normal">{t('rideWithDriver', { driverName })}</p>
         <p className="text-gray-300">{t('-Plate')}: {plateNumber}</p>
       </div>
       )}

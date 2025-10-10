@@ -3,6 +3,7 @@ import React, { createContext, useCallback, useContext, useEffect, useMemo, useS
 export type DriverProfile = {
   driverId: string;
   driverName: string;
+  driverNameAm?: string;
   vehicleModel: string;
   plateNumber: string;
   photoUrl: string;

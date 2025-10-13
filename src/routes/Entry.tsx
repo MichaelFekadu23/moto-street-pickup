@@ -8,7 +8,7 @@ import PrimaryButton from '../components/PrimaryButton';
 import LogoAndDriverInfo from '../components/LogoAndDriverInfo';
 import InputField from '../components/InputField';
 import Footer from '../components/Footer';
-import logo from '../assets/logo.svg';
+import logo from '../assets/logo-new.svg';
 
 import { useQrValidation } from '../features/qr/useQrValidation';
 import { useDriver } from '../features/ride/rideContext';

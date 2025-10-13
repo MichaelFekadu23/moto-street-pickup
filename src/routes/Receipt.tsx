@@ -1,7 +1,7 @@
 // pages/Receipt.tsx
 import { useMemo } from 'react';
 import MainContentWrapper from '../components/MianContentWrapper';
-import logo from '../assets/logo.svg';
+import logo from '../assets/logo-new.svg';
 import Footer from '../components/Footer';
 import pay from '../assets/pay.svg';
 import { LoadingDots } from '../components/LoadingDots';

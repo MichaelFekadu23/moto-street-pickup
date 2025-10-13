@@ -1,5 +1,5 @@
 {
-  "rideWithDriver": "ከሹፌር {{driverName}} ጋር እየተጓዙ ነው",
+  "rideWithDriver": "ከ {{driverName}} ጋር እየተጓዙ ነው",
   "-Plate": " -የመኪና ሰሌዳ",
   "Name": "ስም",
   "Phone": "ስልክ",

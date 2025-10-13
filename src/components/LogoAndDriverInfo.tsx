@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import logo from '../assets/logo.svg';
+import logo from '../assets/logo-new.svg';
 import { useTranslation } from 'react-i18next';
 import { useRide } from '../features/ride/rideContext';
 

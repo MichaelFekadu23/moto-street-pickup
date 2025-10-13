@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import MainContentWrapper from '../components/MianContentWrapper';
-import logo from '../assets/logo.svg';
+import logo from '../assets/logo-new.svg';
 import Footer from '../components/Footer';
 import Completed from '../assets/completed.png';
 import Share from '../assets/share.svg';

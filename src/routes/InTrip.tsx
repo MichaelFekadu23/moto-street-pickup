@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 
 import MainContentWrapper from "../components/MianContentWrapper";
 import PrimaryButton from "../components/PrimaryButton";
-import logo from "../assets/logo.svg";
+import logo from "../assets/logo-new.svg";
 import Footer from "../components/Footer";
 import { useRider } from "../features/ride/rideContext";
 import { useDriver } from "../features/ride/rideContext";

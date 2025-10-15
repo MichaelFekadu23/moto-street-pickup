@@ -24,21 +24,19 @@ const PrimaryButton: React.FC<PrimaryButtonProps> = ({
       type={type}
       onClick={onclick}
       disabled={disabled || loading}
-      className="relative w-full bg-black py-3 px-4 rounded-lg font-semibold text-white hover:bg-gray-800 transition-colors mt-6 flex items-center justify-center disabled:opacity-60"
+      className="w-full bg-black py-3 px-4 rounded-lg font-semibold text-white hover:bg-gray-800 transition-colors mt-6 flex items-center justify-center disabled:opacity-60"
     >
       {loading ? (
-        loadingContent ?? <LoadingDots />
+      loadingContent ?? <LoadingDots />
       ) : (
-        <span className="text-center font-semibold text-[14px]">{title == 'Start Ride' ? t('Start Ride') : title}</span>
-      )}
-
-      {!loading && (
-        <span
-          className="absolute right-4 top-1/2 -translate-y-1/2 text-xl font-semibold"
-          aria-hidden="true"
-        >
-          →
+      <div className="relative w-full flex items-center justify-center">
+        <span className="mx-auto font-semibold text-[14px]">
+        {title == 'Start Ride' ? t('Start Ride') : title}
         </span>
+        <span className="absolute right-0 text-xl font-semibold ml-2" aria-hidden="true">
+        →
+        </span>
+      </div>
       )}
     </button>
   );

@@ -24,7 +24,7 @@ const PrimaryButton: React.FC<PrimaryButtonProps> = ({
       type={type}
       onClick={onclick}
       disabled={disabled || loading}
-      className="w-full bg-black py-3 px-4 rounded-lg font-semibold text-white hover:bg-gray-800 transition-colors mt-6 flex items-center justify-center disabled:opacity-60"
+      className="w-full bg-black py-3 px-4 font-semibold text-white hover:bg-gray-800 transition-colors mt-6 flex items-center justify-center disabled:opacity-60"
     >
       {loading ? (
       loadingContent ?? <LoadingDots />

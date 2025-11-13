@@ -1,6 +1,7 @@
 import React, { type ReactNode } from "react";
 import { LoadingDots } from "./LoadingDots";
 import { t } from "i18next";
+import rightArrow from "../assets/right-arrow.svg"
 
 interface PrimaryButtonProps {
   title: string;
@@ -39,7 +40,7 @@ const PrimaryButton: React.FC<PrimaryButtonProps> = ({
             className="absolute right-0 ml-2 flex items-center justify-center"
             aria-hidden="true"
           >
-            <img src="/src/assets/right-arrow.svg" alt="Right Arrow" />
+            <img src={rightArrow} alt="Right Arrow" />
           </span>
           {/* ↑↑↑ ONLY this part changed ↑↑↑ */}
         </div>

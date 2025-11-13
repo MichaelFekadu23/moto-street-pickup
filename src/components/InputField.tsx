@@ -27,7 +27,7 @@ export default function InputField<TFormValues extends FieldValues>({
   return (
     <div className="w-full">
       <fieldset
-        className={`relative w-full border-[0.5px] border-t-[0.5px] p-0 ${
+        className={`relative w-full border-[0.5px] ios-border-fix  p-0 ${
           error ? "border-red-500" : "border-white"
         }`}
       >

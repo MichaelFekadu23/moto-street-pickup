@@ -1,6 +1,7 @@
 import React, { type ReactNode } from "react";
 import { LoadingDots } from "./LoadingDots";
 import { t } from "i18next";
+import { ArrowRight } from "lucide-react"; // ← ONLY addition
 
 interface PrimaryButtonProps {
   title: string;
@@ -27,16 +28,22 @@ const PrimaryButton: React.FC<PrimaryButtonProps> = ({
       className="w-full bg-black py-3 px-4 font-semibold text-white hover:bg-gray-800 transition-colors mt-6 flex items-center justify-center disabled:opacity-60"
     >
       {loading ? (
-      loadingContent ?? <LoadingDots />
+        loadingContent ?? <LoadingDots />
       ) : (
-      <div className="relative w-full flex items-center justify-center">
-        <span className="mx-auto font-semibold text-[14px]">
-        {title == 'Start Ride' ? t('Start Ride') : title}
-        </span>
-        <span className="absolute right-0 text-xl font-semibold ml-2" aria-hidden="true">
-        →
-        </span>
-      </div>
+        <div className="relative w-full flex items-center justify-center">
+          <span className="mx-auto font-semibold text-[14px]">
+            {title == "Start Ride" ? t("Start Ride") : title}
+          </span>
+
+          {/* ↓↓↓ ONLY change: replace → with lucide-react ArrowRight ↓↓↓ */}
+          <span
+            className="absolute right-0 ml-2 flex items-center justify-center"
+            aria-hidden="true"
+          >
+            <img src="/src/assets/right-arrow.svg" alt="Right Arrow" />
+          </span>
+          {/* ↑↑↑ ONLY this part changed ↑↑↑ */}
+        </div>
       )}
     </button>
   );

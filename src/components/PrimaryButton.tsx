@@ -1,7 +1,6 @@
 import React, { type ReactNode } from "react";
 import { LoadingDots } from "./LoadingDots";
 import { t } from "i18next";
-import { ArrowRight } from "lucide-react"; // ← ONLY addition
 
 interface PrimaryButtonProps {
   title: string;
